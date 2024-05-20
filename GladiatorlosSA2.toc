@@ -12,3 +12,4 @@ Locales\locales.xml
 GladiatorlosSA2.lua
 spelllist.lua
 options.lua
+BlizOptionsAddonsTab.lua

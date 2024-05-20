@@ -6,7 +6,6 @@
  local LSM = LibStub("LibSharedMedia-3.0")
  local self, GSA, PlaySoundFile = GladiatorlosSA, GladiatorlosSA, PlaySoundFile
  local GSA_TEXT = "|cff69CCF0GladiatorlosSA2|r (|cffFFF569/gsa|r)"
- local GSA_VERSION = "|cffFF7D0A CATA-1.0 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
  local GSA_TEST_BRANCH = ""
  local GSA_AUTHOR = " "
  local gsadb
@@ -125,65 +124,31 @@
  end
  -- LSM END
 
- function GladiatorlosSA:OnInitialize()
+local function InitializeDBSpellList()
 	if not self.spellList then
 		self.spellList = self:GetSpellList()
 	end
 	for _,category in pairs(self.spellList) do
 		for _,kind in pairs(category) do
-			-- kind is class in game, because class is keyword for many programming language
 			for _,spell in pairs(kind) do
 				if dbDefaults.profile[spell] == nil then dbDefaults.profile[spell] = true end
 			end
 		end
 	end
-	
+
 	self.db1 = LibStub("AceDB-3.0"):New("GladiatorlosSADB",dbDefaults, "Default");
-	DEFAULT_CHAT_FRAME:AddMessage(GSA_TEXT .. GSA_VERSION .. GSA_AUTHOR .." "..GSA_TEST_BRANCH);
-	self:RegisterChatCommand("GladiatorlosSA", "ShowConfig")
-	self:RegisterChatCommand("gsa", "ShowConfig")
-	self:RegisterChatCommand("gsa2", "ShowConfig")
 	self.db1.RegisterCallback(self, "OnProfileChanged", "ChangeProfile")
 	self.db1.RegisterCallback(self, "OnProfileCopied", "ChangeProfile")
 	self.db1.RegisterCallback(self, "OnProfileReset", "ChangeProfile")
 	gsadb = self.db1.profile
-	local options = {
-		name = "GladiatorlosSA2",
-		desc = L["PVP Voice Alert"],
-		type = 'group',
-		args = {
-			creditdesc = {
-			order = 1,
-			type = "description",
-			name = L["GladiatorlosSACredits"].."\n",
-			cmdHidden = true
-			},
-			gsavers = {
-			order = 2,
-			type = "description",
-			name = GSA_VERSION,
-			cmdHidden = true
-			},
-		},
-	}
-	local bliz_options = CopyTable(options)
-	bliz_options.args.load = {
-		name = L["Load Configuration"],
-		desc = L["Load Configuration Options"],
-		type = 'execute',
-		func = function()
-		self:OnOptionCreate()
-			bliz_options.args.load.disabled = true
-			GameTooltip:Hide()
-			--fix for in 5.3 BLZOptionsFrame can't refresh on load
-			InterfaceOptionsFrame:Hide()
-			InterfaceOptionsFrame:Show()
-		end,
-		handler = GladiatorlosSA,
-	}
-	LibStub("AceConfig-3.0"):RegisterOptionsTable("GladiatorlosSA_bliz", bliz_options)
-	AceConfigDialog:AddToBlizOptions("GladiatorlosSA_bliz", "GladiatorlosSA")
+end
+
+function GladiatorlosSA:OnInitialize()
+	InitializeDBSpellList()
+	self:InitializeOptionTable()
+	self:RegisterChatCommand("gsa", "ShowConfig")
 	LSM.RegisterCallback(LSM_GSA_SOUNDFILES, "LibSharedMedia_Registered", LSMRegistered)
+	DEFAULT_CHAT_FRAME:AddMessage(GSA_TEXT .. L["GSA_VERSION"] .. GSA_AUTHOR .." "..GSA_TEST_BRANCH);
  end
 
  function GladiatorlosSA:OnEnable()
