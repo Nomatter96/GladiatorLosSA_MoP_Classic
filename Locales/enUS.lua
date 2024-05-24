@@ -114,6 +114,7 @@ L["Resurrection_Desc"] = "All out-of-combat resurrection abilities."
 L["Special Abilities"] = "Cast Success/Instants"
 L["Friendly Interrupt"] = true
 L["Profiles"] = true
+L["Racials"] = true
 
 L["PvPWorldQuests"] = "NYI"
 L["DisablePvPWorldQuests"] = "NYI"

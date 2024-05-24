@@ -128,6 +128,8 @@
 				[6229] = "shadowWard",
 				[18708] = "felDomination",
 				[47241] = "metamorphosis",
+				[79460] = "demonsoul",
+				[79462] = "demonsoul1",
 			},
 
 			warrior = {
