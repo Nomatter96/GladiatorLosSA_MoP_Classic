@@ -6,4 +6,4 @@ I just download GladiatorLosSA wotlk 3.4 from https://www.curseforge.com/wow/add
 I testing only for english client. Idk about other languages
 
 Set Up:
-Rename folder from GladiatorLosSA_Cata4.4 to GladiatorLosSA2 and place to _classic_\Interface\AddOns folder 
+Rename folder GladiatorLosSA_Cata4.4 to GladiatorLosSA2 and place to _classic_\Interface\AddOns folder 
