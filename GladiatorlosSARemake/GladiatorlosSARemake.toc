@@ -2,14 +2,14 @@
 ## Title: GladiatorlosSA
 ## Notes: PvP Sound Alerter
 ## Notes-zhTW: PVP技能語音提示
-## Author: Abatorlos(of Spinebreaker), DuskAshes, superk521, zuhligan, Grit (Legion Update), Mini_Dragon, LordKuper, Nomatter(Cata Update)
+## Author: Abatorlos(of Spinebreaker), Nomatter(Cata Update)
 ## SavedVariables: GladiatorlosSADB
-## Version: CATA-1.0
+## Version: CATA-2.0
 
 embeds.xml
 Locales\locales.xml
 
-GladiatorlosSA2.lua
+GladiatorlosSARemake.lua
 spelllist.lua
 options.lua
 BlizOptionsAddonsTab.lua

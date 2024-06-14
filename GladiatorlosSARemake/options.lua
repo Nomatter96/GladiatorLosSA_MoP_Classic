@@ -9,18 +9,18 @@ local options_created = false -- ***** @
 local GSA_OUTPUT = {["MASTER"] = L["Master"],["SFX"] = L["SFX"],["AMBIENCE"] = L["Ambience"],["MUSIC"] = L["Music"],["DIALOG"] = L["Dialog"]}
 
 local groups_options = {
-	general = { name = L["General Abilities"],        kind = "general", order = 30  },
-	druid =   { name = L["|cffFF7D0ADruid|r"],        kind = "druid",   order = 70  },
-	hunter =  { name = L["|cffABD473Hunter|r"],       kind = "hunter",  order = 80  },
-	mage =    { name = L["|cff69CCF0Mage|r"],         kind = "mage",    order = 90  },
-	paladin = { name = L["|cffF58CBAPaladin|r"],      kind = "paladin", order = 100 },
-	priest =  { name = L["|cffFFFFFFPriest|r"],       kind = "priest",  order = 110 },
-	rogue =   { name = L["|cffFFF569Rogue|r"],        kind = "rogue",   order = 120 },
-	shaman =  { name = L["|cff0070daShaman|r"],       kind = "shaman",  order = 130 },
-	warlock = { name = L["|cff9482C9Warlock|r"],      kind = "warlock", order = 140 },
-	warrior = { name = L["|cffC79C6EWarrior|r"],      kind = "warrior", order = 150 },
-	dk =      { name = L["|cffC41F3BDeath Knight|r"], kind = "dk",      order = 160 },
-	races =   { name = L["Racials"],                  kind = "races",   order = 170 },
+	general =     { name = L["General Abilities"],        kind = "general",     order = 30  },
+	DRUID =       { name = L["|cffFF7D0ADruid|r"],        kind = "DRUID",       order = 70  },
+	HUNTER =      { name = L["|cffABD473Hunter|r"],       kind = "HUNTER",      order = 80  },
+	MAGE =        { name = L["|cff69CCF0Mage|r"],         kind = "MAGE",        order = 90  },
+	PALADIN =     { name = L["|cffF58CBAPaladin|r"],      kind = "PALADIN",     order = 100 },
+	PRIEST =      { name = L["|cffFFFFFFPriest|r"],       kind = "PRIEST",      order = 110 },
+	ROGUE =       { name = L["|cffFFF569Rogue|r"],        kind = "ROGUE",       order = 120 },
+	SHAMAN =      { name = L["|cff0070daShaman|r"],       kind = "SHAMAN",      order = 130 },
+	WARLOCK =     { name = L["|cff9482C9Warlock|r"],      kind = "WARLOCK",     order = 140 },
+	WARRIOR =     { name = L["|cffC79C6EWarrior|r"],      kind = "WARRIOR",     order = 150 },
+	DEATHKNIGHT = { name = L["|cffC41F3BDeath Knight|r"], kind = "DEATHKNIGHT", order = 160 },
+	races =       { name = L["Racials"],                  kind = "races",       order = 170 },
 }
 
 function GSA:ShowConfig()
@@ -48,21 +48,38 @@ function GSA:AddOption(name, keyName)
 	return AceConfigDialog:AddToBlizOptions("GladiatorlosSA", name, "GladiatorlosSA", keyName)
 end
 
+-- TODO
 local function setOption(info, value)
-	local name = info[#info]
-	gsadb[name] = value
-	if value then
-		GSA:PlaySound(name)
+	if info[2] == "auraAppliedToggles" or info[2] == "auraDownToggles" or info[2] == "castStartToggles" or info[2] == "castSuccessToggles" then
+		local spellType = info[2]
+		local kind = info[3]
+		local spellID = tonumber(info[#info])
+		gsadb[spellType][spellID] = value
+		if value then
+			GSA:PlaySound(GSA.spellList[kind][spellID]["soundName"])
+		end
+	else
+		local name = info[#info]
+		gsadb[name] = value
+		if value then
+			GSA:PlaySound(name)
+		end
 	end
-	GSA:CanTalkHere()
+	GSA:CheckCanPlaySound()
 end
 
 local function getOption(info)
-	local name = info[#info]
-	return gsadb[name]
+	if info[2] == "auraAppliedToggles" or info[2] == "auraDownToggles" or info[2] == "castStartToggles" or info[2] == "castSuccessToggles" then
+		local spellType = info[2]
+		local spellID = tonumber(info[#info])
+		return gsadb[spellType][spellID]
+	else
+		local name = info[#info]
+		return gsadb[name]
+	end
 end
 
-local function spellOption(order, spellID, ...)
+local function spellOption(number, spellID)
 	local spellname, _, icon = GetSpellInfo(spellID)	
 	if (spellname ~= nil) then
 		return {
@@ -71,42 +88,50 @@ local function spellOption(order, spellID, ...)
 			desc = function ()
 				GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
 				GameTooltip:SetHyperlink(GetSpellLink(spellID))
-				--GameTooltip:SetSpellByID(spellID)
 				GameTooltip:Show()
-				--print(GetSpellInfo((spellID)))
-			end, -- https://i.imgur.com/ChzUb.jpg
-			-- why are you reading this disaster, go away this is embarrassing
+			end,
 			descStyle = "custom",
-					order = order,
+			order = number
 		}
 	else
 		GSA.log("spell id: " .. spellID .. " is invalid")
 		return {
 			type = 'toggle',
 			name = "Unknown Spell; ID:" .. spellID,	
-			order = order,
+			order = number
 		}
 	end
 end
 
-local function listOption(spellList, ...)
+local function listOption(spellList, spellTypes)
 	local args = {}
 	local n = 0
-	for id, name in pairs(spellList) do
-		n = n + 1
-		rawset (args, name, spellOption(n, id))
-		GameTooltip:Hide()
+	for id, body in pairs(spellList) do
+		for _, spellType in pairs(spellTypes) do
+			if spellType == body["type"] then
+				n = n + 1
+				rawset (args, tostring(id), spellOption(n, id))
+				GameTooltip:Hide()
+			end
+		end
 	end
 	return args
 end
 
-local function MakeGroupOption(category_name, group_option)
+local function MakeGroupOption(spellTypes, groupOption)
 	return {
 		type = 'group',
 		inline = true,
-		name = group_option["name"],
-		order = group_option["order"],					      		
-		args = listOption(GSA.spellList[category_name][group_option["kind"]]),
+		name = groupOption["name"],
+		order = groupOption["order"],
+		args = listOption(GSA.spellList[groupOption["kind"]], spellTypes),
+	}
+end
+
+local function MakeGroupsSpells(aName)
+	return {
+		type = 'group',
+		name = aName
 	}
 end
 
@@ -270,13 +295,6 @@ function GSA:OnOptionCreate()
 								desc = L["Alert works anywhere"],
 								order = 10,
 							},
-							--onlyflagged = {
-							--	type = 'toggle',
-							--	name = L["OnlyIfPvPFlagged"],
-							--	desc = L["OnlyIfPvPFlaggedDesc"],
-							--	disabled = function() return not gsadb.field or gsadb.all end,
-							--	order = 20,
-							--},
 							NewLine1 = {
 								type= 'description',
 								order = 30,
@@ -314,8 +332,8 @@ function GSA:OnOptionCreate()
 								desc = L["Alert works anywhere else then anena, BG, dungeon instance"],
 								disabled = function() return gsadb.all end,
 								order = 80,
-							},
-						},
+							}
+						}
 					},
 					voice = {
 						type = 'group',
@@ -399,7 +417,7 @@ function GSA:OnOptionCreate()
 				childGroups = "tab",
 				order = -2,
 				args = {
-				menu_voice = {
+					menu_voice = {
 						type = 'group',
 						inline = true,
 						name = L["Voice menu config"], 
@@ -410,230 +428,160 @@ function GSA:OnOptionCreate()
 								name = L["Choose a test voice pack"],
 								desc = L["Select the menu voice pack alert"], 
 								values = self.GSA_LANGUAGE,
-								order = 1,
-							},
-						},
-				},
-				spellGeneral = {
+								order = 1
+							}
+						}
+					},
+					spellDisable = {
 						type = 'group',
 						name = L["Disable options"],
 						desc = L["Disable abilities by type"],
 						inline = true,
 						order = -2,
 						args = {
-							aruaApplied = {
+							isAuraAppliedEnable = {
 								type = 'toggle',
 								name = L["Disable Buff Applied"],
 								desc = L["Check this will disable alert for buff applied to hostile targets"],
 								order = 1,
 							},
-							aruaRemoved = {
+							isAuraDownEnable = {
 								type = 'toggle',
 								name = L["Disable Buff Down"],
 								desc = L["Check this will disable alert for buff removed from hostile targets"],
 								order = 2,
 							},
-							castStart = {
+							isCastStartEnable = {
 								type = 'toggle',
 								name = L["Disable Spell Casting"],
 								desc = L["Chech this will disable alert for spell being casted to friendly targets"],
 								order = 3,
 							},
-							castSuccess = {
+							isCastSuccessEnable = {
 								type = 'toggle',
 								name = L["Disable special abilities"],
 								desc = L["Check this will disable alert for instant-cast important abilities"],
 								order = 4,
-							},
-							interrupt = {
-								type = 'toggle',
-								name = L["Disable friendly interrupt"],
-								desc = L["Check this will disable alert for successfully-landed friendly interrupting abilities"],
-								order = 6,
-							},
-							interruptedfriendly = {
-								type = 'toggle',
-								name = L["FriendlyInterrupted"],
-								desc = L["FriendlyInterruptedDesc"],
-								order = 7,
-							},
-						},
+							}
+							--interruptedfriendly = {
+							--	type = 'toggle',
+							--	name = L["FriendlyInterrupted"],
+							--	desc = L["FriendlyInterruptedDesc"],
+							--	order = 5,
+							--}
+						}
 					},
-					spellAuraApplied = {
+					generalOptions = {
 						type = 'group',
-						--inline = true,
-						name = L["Buff Applied"],
-						disabled = function() return gsadb.aruaApplied end,
-						order = 1,
+						name = L["General options"],
+						inline = true,
+						order = -1,
 						args = {
-							aonlyTF = {	-- AuraApplied
+							onlyTargetFocus = {
 								type = 'toggle',
 								name = L["Target and Focus Only"],
 								desc = L["Alert works only when your current target or focus gains the buff effect or use the ability"],
-								order = 10,
+								order = 1
 							},
-							drinking = { -- AuraApplied 
+							drinking = {
 								type = 'toggle',
 								name = L["Alert Drinking"],
 								desc = L["In arena, alert when enemy is drinking"],
-								order = 20,
+								order = 2
 							},
-							-- MakeGroupOption("auraApplied", groups_options["general"])
-							generalaura = MakeGroupOption("auraApplied", groups_options["general"]),
-							druid =       MakeGroupOption("auraApplied", groups_options["druid"]),
-							hunter =      MakeGroupOption("auraApplied", groups_options["hunter"]),
-							mage =        MakeGroupOption("auraApplied", groups_options["mage"]),
-							paladin =     MakeGroupOption("auraApplied", groups_options["paladin"]),
-							priest	=     MakeGroupOption("auraApplied", groups_options["priest"]),
-							rogue =       MakeGroupOption("auraApplied", groups_options["rogue"]),
-							shaman	=     MakeGroupOption("auraApplied", groups_options["shaman"]),
-							warlock	=     MakeGroupOption("auraApplied", groups_options["warlock"]),
-							warrior	=     MakeGroupOption("auraApplied", groups_options["warrior"]),
-							dk	=         MakeGroupOption("auraApplied", groups_options["dk"]),
-						},
-					},
-					spellAuraRemoved = {
-						type = 'group',
-						--inline = true,
-						name = L["Buff Down"],
-						disabled = function() return gsadb.aruaRemoved end,
-						order = 2,
-						args = {
-							ronlyTF = { -- AuraRemoved
-								type = 'toggle',
-								name = L["Target and Focus Only"],
-								desc = L["Alert works only when your current target or focus gains the buff effect or use the ability"],
-								order = 10,
-							},
-							generalauradown = MakeGroupOption("auraRemoved", groups_options["general"]),
-							druid =           MakeGroupOption("auraRemoved", groups_options["druid"]),
-							hunter =          MakeGroupOption("auraRemoved", groups_options["hunter"]),
-							mage =            MakeGroupOption("auraRemoved", groups_options["mage"]),
-							paladin =         MakeGroupOption("auraRemoved", groups_options["paladin"]),
-							priest	=         MakeGroupOption("auraRemoved", groups_options["priest"]),
-							rogue =           MakeGroupOption("auraRemoved", groups_options["rogue"]),
-							shaman	=         MakeGroupOption("auraRemoved", groups_options["shaman"]),
-							warlock =         MakeGroupOption("auraRemoved", groups_options["warlock"]),
-							warrior	=         MakeGroupOption("auraRemoved", groups_options["warrior"]),
-							dk =              MakeGroupOption("auraRemoved", groups_options["dk"]),
-							racials =         MakeGroupOption("auraRemoved", groups_options["races"]),
-						},
-					},
-					spellCastStart = {
-						type = 'group',
-						--inline = true,
-						name = L["Spell Casting"],
-						disabled = function() return gsadb.castStart end,
-						order = 2,
-						args = {
-							conlyTF = { -- CastStart
-								type = 'toggle',
-								name = L["Target and Focus Only"],
-								desc = L["Alert works only when your current target or focus gains the buff effect or use the ability"],
-								order = 1,
-							},
-							resurrection = { -- CastStart
+							resurrection = {
 								type = 'toggle',
 								name = L["Resurrection"],
 								desc = L["Resurrection_Desc"],
-								order = 20,
+								order = 3
 							},
---[[							bigHeal = { -- CastStart
-								type = 'toggle',
-								name = L["BigHeal"],
-								desc = L["BigHeal_Desc"],
-								order = 30,
-							},]]
-							druid =   MakeGroupOption("castStart", groups_options["druid"]),
-							hunter =  MakeGroupOption("castStart", groups_options["hunter"]),
-							mage =    MakeGroupOption("castStart", groups_options["mage"]),
-							paladin = MakeGroupOption("castStart", groups_options["paladin"]),
-							priest	= MakeGroupOption("castStart", groups_options["priest"]),
-							rogue =   MakeGroupOption("castStart", groups_options["rogue"]),
-							shaman	= MakeGroupOption("castStart", groups_options["shaman"]),
-							warlock = MakeGroupOption("castStart", groups_options["warlock"]),
-							warrior	= MakeGroupOption("castStart", groups_options["warrior"]),
-						},
-					},
-					spellCastSuccess = {
-						type = 'group',
-						--inline = true,
-						name = L["Special Abilities"],
-						disabled = function() return gsadb.castSuccess end,
-						order = 3,
-						args = {
-							sonlyTF = { -- CastSuccess
-								type = 'toggle',
-								name = L["Target and Focus Only"],
-								desc = L["Alert works only when your current target or focus gains the buff effect or use the ability"],
-								order = 10,
-							},
-							class = { -- CastSuccess
+							pvpTrinket = {
 								type = 'toggle',
 								name = L["PvP Trinketed Class"],
 								desc = L["Also announce class name with trinket alert when hostile targets use PvP trinket in arena"],
-								--disabled = function() return not gsadb.trinket end,
-								order = 13,
+								order = 4
 							},
-							success = { -- CastSuccess
+							isInterruptEnable = {
 								type = 'toggle',
-								name = L["CastingSuccess"],
-								desc = L["CastingSuccess_Desc"],
-								--disabled = function() return gsadb.castStart end,
-								order = 15,
-							},
-							connected = { -- CastSuccess
-								type = 'toggle',
-								name = L["Connected"],
-								desc = L["Connected_Desc"],
-								--disabled = function() return gsadb.castStart end,
-								order = 17,
-							},
---[[							cure = { -- CastSuccess
-								type = 'toggle',
-								name = L["DPSDispel"],
-								desc = L["DPSDispel_Desc"],
-								order = 20,
-							},]]
---[[							dispel = { -- CastSuccess
-								type = 'toggle',
-								name = L["HealerDispel"],
-								desc = L["HealerDispel_Desc"],
-								order = 24,
-							},]]
---[[							purge = { -- CastSuccess
-								type = 'toggle',
-								name = L["Purge"],
-								desc = L["PurgeDesc"],
-								order = 26,
-							},]]
---[[							general = { -- CastSuccess
-								type = 'group',
-								inline = true,
-								name = L["General Abilities"],
-								order = 30,
-								args = listOption({},"castSuccess"),
-							},]]
---[[							enemyInterrupts = { -- CastSuccess
-								type = 'group',
-								inline = true,
-								name = L["EnemyInterrupts"],
-								order = 35,
-								args = listOption({},"castSuccess"),
-							},]]
-							druid =   MakeGroupOption("castSuccess", groups_options["druid"]),
-							hunter =  MakeGroupOption("castSuccess", groups_options["hunter"]),
-							mage =    MakeGroupOption("castSuccess", groups_options["mage"]),
-							paladin = MakeGroupOption("castSuccess", groups_options["paladin"]),
-							priest	= MakeGroupOption("castSuccess", groups_options["priest"]),
-							rogue =   MakeGroupOption("castSuccess", groups_options["rogue"]),
-							shaman	= MakeGroupOption("castSuccess", groups_options["shaman"]),
-							warlock = MakeGroupOption("castSuccess", groups_options["warlock"]),
-							warrior	= MakeGroupOption("castSuccess", groups_options["warrior"]),
-							dk =      MakeGroupOption("castSuccess", groups_options["dk"]),
-							racials = MakeGroupOption("castSuccess", groups_options["races"]),
+								name = L["Enable interrupt"],
+								order = 5,
+							}
+						}
+					},
+				auraAppliedToggles = {
+					type = 'group',
+					name = L["Buff Applied"],
+					disabled = function() return not gsadb.isAuraAppliedEnable end,
+					order = 1,
+					args = {
+						--generalaura = MakeGroupOption({"buff", "debuff"}, groups_options["general"]),
+						DRUID       = MakeGroupOption({"buff", "debuff"}, groups_options["DRUID"]),
+						HUNTER      = MakeGroupOption({"buff", "debuff"}, groups_options["HUNTER"]),
+						MAGE        = MakeGroupOption({"buff", "debuff"}, groups_options["MAGE"]),
+						PALADIN     = MakeGroupOption({"buff", "debuff"}, groups_options["PALADIN"]),
+						PRIEST	    = MakeGroupOption({"buff", "debuff"}, groups_options["PRIEST"]),
+						ROGUE       = MakeGroupOption({"buff", "debuff"}, groups_options["ROGUE"]),
+						SHAMAN	    = MakeGroupOption({"buff", "debuff"}, groups_options["SHAMAN"]),
+						WARLOCK	    = MakeGroupOption({"buff", "debuff"}, groups_options["WARLOCK"]),
+						WARRIOR	    = MakeGroupOption({"buff", "debuff"}, groups_options["WARRIOR"]),
+						DEATHKNIGHT	= MakeGroupOption({"buff", "debuff"}, groups_options["DEATHKNIGHT"]),
+					},
+				},
+				auraDownToggles = {
+						type = 'group',
+						name = L["Buff Down"],
+						disabled = function() return not gsadb.isAuraDownEnable end,
+						order = 2,
+						args = {
+							--generalauradown = MakeGroupOption({"buff"}, groups_options["general"]),
+							DRUID       = MakeGroupOption({"buff"}, groups_options["DRUID"]),
+							HUNTER      = MakeGroupOption({"buff"}, groups_options["HUNTER"]),
+							MAGE        = MakeGroupOption({"buff"}, groups_options["MAGE"]),
+							PALADIN     = MakeGroupOption({"buff"}, groups_options["PALADIN"]),
+							PRIEST	    = MakeGroupOption({"buff"}, groups_options["PRIEST"]),
+							ROGUE       = MakeGroupOption({"buff"}, groups_options["ROGUE"]),
+							SHAMAN	    = MakeGroupOption({"buff"}, groups_options["SHAMAN"]),
+							WARLOCK     = MakeGroupOption({"buff"}, groups_options["WARLOCK"]),
+							WARRIOR	    = MakeGroupOption({"buff"}, groups_options["WARRIOR"]),
+							DEATHKNIGHT = MakeGroupOption({"buff"}, groups_options["DEATHKNIGHT"]),
+							--racials =         MakeGroupOption({"buff"}, groups_options["races"]),
 						},
 					},
+					castStartToggles = {
+						type = 'group',
+						name = L["Spell Cast"],
+						disabled = function() return not gsadb.isCastStartEnable end,
+						order = 2,
+						args = {
+							DRUID       = MakeGroupOption({"cast", "success", "pet"}, groups_options["DRUID"]),
+							HUNTER      = MakeGroupOption({"cast", "success", "pet"}, groups_options["HUNTER"]),
+							MAGE        = MakeGroupOption({"cast", "success", "pet"}, groups_options["MAGE"]),
+							PALADIN     = MakeGroupOption({"cast", "success", "pet"}, groups_options["PALADIN"]),
+							PRIEST	    = MakeGroupOption({"cast", "success", "pet"}, groups_options["PRIEST"]),
+							ROGUE       = MakeGroupOption({"cast", "success", "pet"}, groups_options["ROGUE"]),
+							SHAMAN	    = MakeGroupOption({"cast", "success", "pet"}, groups_options["SHAMAN"]),
+							WARLOCK     = MakeGroupOption({"cast", "success", "pet"}, groups_options["WARLOCK"]),
+							WARRIOR	    = MakeGroupOption({"cast", "success", "pet"}, groups_options["WARRIOR"]),
+							DEATHKNIGHT = MakeGroupOption({"cast", "success", "pet"}, groups_options["DEATHKNIGHT"]),
+						},
+					},
+					castSuccessToggles = {
+						type = 'group',
+						name = L["Special Abilities"],
+						disabled = function() return not gsadb.isCastSuccessEnable end,
+						order = 3,
+						args = {
+							DRUID       = MakeGroupOption({"success"}, groups_options["DRUID"]),
+							HUNTER      = MakeGroupOption({"success"}, groups_options["HUNTER"]),
+							MAGE        = MakeGroupOption({"success"}, groups_options["MAGE"]),
+							PRIEST	    = MakeGroupOption({"success"}, groups_options["PRIEST"]),
+							SHAMAN	    = MakeGroupOption({"success"}, groups_options["SHAMAN"]),
+							WARLOCK     = MakeGroupOption({"success"}, groups_options["WARLOCK"]),
+							WARRIOR	    = MakeGroupOption({"success"}, groups_options["WARRIOR"]),
+							DEATHKNIGHT = MakeGroupOption({"success"}, groups_options["DEATHKNIGHT"]),
+							--racials = MakeGroupOption("castSuccess", groups_options["races"]),
+						}
+					}
 				},
 			},
 			custom = {
