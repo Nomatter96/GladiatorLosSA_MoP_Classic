@@ -29,6 +29,27 @@
 
 function GladiatorlosSA:GetSpellList ()
 	return {
+		GENERAL = {
+			[34709] = { soundName = "shadowSight",           type = "buff"    },
+			[44055] = { soundName = "battlemaster",          type = "buff"    }
+		},
+
+		RACIAL = {
+			[58984] = { soundName = "shadowmeld",            type = "buff"    },
+			[26297] = { soundName = "berserking",            type = "buff"    },
+			[65116] = { soundName = "stoneform",             type = "buff"    },
+			[20572] = { soundName = "bloodFury",             type = "buff"    }, -- Copy past from Blizzard start
+			[33697] = { soundName = "bloodFury",             type = "buff"    },
+			[33702] = { soundName = "bloodFury",             type = "buff"    }, -- Copy past from Blizzard end
+			[7744]  = { soundName = "willOfTheForsaken",     type = "buff"    },
+			[28880] = { soundName = "giftOfTheNaaru",        type = "buff"    },
+			[28730] = { soundName = "arcaneTorrent",         type = "debuff"  }, -- Copy past from Blizzard start
+			[80483] = { soundName = "arcaneTorrent",         type = "debuff"  },
+			[25046] = { soundName = "arcaneTorrent",         type = "debuff"  },
+			[50613] = { soundName = "arcaneTorrent",         type = "debuff"  },
+			[69179] = { soundName = "arcaneTorrent",         type = "debuff"  } -- Copy past from Blizzard end
+		},
+		
 		DRUID = {
 			[5229]  = { soundName = "enrage",                type = "buff"    },
 			[61336] = { soundName = "survivalInstincts",     type = "buff"    },

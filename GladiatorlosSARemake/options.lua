@@ -9,18 +9,18 @@ local options_created = false -- ***** @
 local GSA_OUTPUT = {["MASTER"] = L["Master"],["SFX"] = L["SFX"],["AMBIENCE"] = L["Ambience"],["MUSIC"] = L["Music"],["DIALOG"] = L["Dialog"]}
 
 local groups_options = {
-	general =     { name = L["General Abilities"],        kind = "general",     order = 30  },
-	DRUID =       { name = L["|cffFF7D0ADruid|r"],        kind = "DRUID",       order = 70  },
-	HUNTER =      { name = L["|cffABD473Hunter|r"],       kind = "HUNTER",      order = 80  },
-	MAGE =        { name = L["|cff69CCF0Mage|r"],         kind = "MAGE",        order = 90  },
-	PALADIN =     { name = L["|cffF58CBAPaladin|r"],      kind = "PALADIN",     order = 100 },
-	PRIEST =      { name = L["|cffFFFFFFPriest|r"],       kind = "PRIEST",      order = 110 },
-	ROGUE =       { name = L["|cffFFF569Rogue|r"],        kind = "ROGUE",       order = 120 },
-	SHAMAN =      { name = L["|cff0070daShaman|r"],       kind = "SHAMAN",      order = 130 },
-	WARLOCK =     { name = L["|cff9482C9Warlock|r"],      kind = "WARLOCK",     order = 140 },
-	WARRIOR =     { name = L["|cffC79C6EWarrior|r"],      kind = "WARRIOR",     order = 150 },
-	DEATHKNIGHT = { name = L["|cffC41F3BDeath Knight|r"], kind = "DEATHKNIGHT", order = 160 },
-	races =       { name = L["Racials"],                  kind = "races",       order = 170 },
+	GENERAL     = { name = L["General Abilities"],        kind = "GENERAL",     order = 1  },
+	RACIAL      = { name = L["Racials"],                  kind = "RACIAL",      order = 2  },
+	DRUID       = { name = L["|cffFF7D0ADruid|r"],        kind = "DRUID",       order = 3  },
+	HUNTER      = { name = L["|cffABD473Hunter|r"],       kind = "HUNTER",      order = 4  },
+	MAGE        = { name = L["|cff69CCF0Mage|r"],         kind = "MAGE",        order = 5  },
+	PALADIN     = { name = L["|cffF58CBAPaladin|r"],      kind = "PALADIN",     order = 6  },
+	PRIEST      = { name = L["|cffFFFFFFPriest|r"],       kind = "PRIEST",      order = 7  },
+	ROGUE       = { name = L["|cffFFF569Rogue|r"],        kind = "ROGUE",       order = 8  },
+	SHAMAN      = { name = L["|cff0070daShaman|r"],       kind = "SHAMAN",      order = 9  },
+	WARLOCK     = { name = L["|cff9482C9Warlock|r"],      kind = "WARLOCK",     order = 10 },
+	WARRIOR     = { name = L["|cffC79C6EWarrior|r"],      kind = "WARRIOR",     order = 11 },
+	DEATHKNIGHT = { name = L["|cffC41F3BDeath Knight|r"], kind = "DEATHKNIGHT", order = 12 }
 }
 
 function GSA:ShowConfig()
@@ -514,7 +514,8 @@ function GSA:OnOptionCreate()
 					disabled = function() return not gsadb.isAuraAppliedEnable end,
 					order = 1,
 					args = {
-						--generalaura = MakeGroupOption({"buff", "debuff"}, groups_options["general"]),
+						GENERAL     = MakeGroupOption({"buff", "debuff"}, groups_options["GENERAL"]),
+						RACIAL      = MakeGroupOption({"buff", "debuff"}, groups_options["RACIAL"]),
 						DRUID       = MakeGroupOption({"buff", "debuff"}, groups_options["DRUID"]),
 						HUNTER      = MakeGroupOption({"buff", "debuff"}, groups_options["HUNTER"]),
 						MAGE        = MakeGroupOption({"buff", "debuff"}, groups_options["MAGE"]),
@@ -524,7 +525,7 @@ function GSA:OnOptionCreate()
 						SHAMAN	    = MakeGroupOption({"buff", "debuff"}, groups_options["SHAMAN"]),
 						WARLOCK	    = MakeGroupOption({"buff", "debuff"}, groups_options["WARLOCK"]),
 						WARRIOR	    = MakeGroupOption({"buff", "debuff"}, groups_options["WARRIOR"]),
-						DEATHKNIGHT	= MakeGroupOption({"buff", "debuff"}, groups_options["DEATHKNIGHT"]),
+						DEATHKNIGHT	= MakeGroupOption({"buff", "debuff"}, groups_options["DEATHKNIGHT"])
 					},
 				},
 				auraDownToggles = {
@@ -533,7 +534,8 @@ function GSA:OnOptionCreate()
 						disabled = function() return not gsadb.isAuraDownEnable end,
 						order = 2,
 						args = {
-							--generalauradown = MakeGroupOption({"buff"}, groups_options["general"]),
+							GENERAL     = MakeGroupOption({"buff"}, groups_options["GENERAL"]),
+							RACIAL      = MakeGroupOption({"buff"}, groups_options["RACIAL"]),
 							DRUID       = MakeGroupOption({"buff"}, groups_options["DRUID"]),
 							HUNTER      = MakeGroupOption({"buff"}, groups_options["HUNTER"]),
 							MAGE        = MakeGroupOption({"buff"}, groups_options["MAGE"]),
@@ -543,8 +545,7 @@ function GSA:OnOptionCreate()
 							SHAMAN	    = MakeGroupOption({"buff"}, groups_options["SHAMAN"]),
 							WARLOCK     = MakeGroupOption({"buff"}, groups_options["WARLOCK"]),
 							WARRIOR	    = MakeGroupOption({"buff"}, groups_options["WARRIOR"]),
-							DEATHKNIGHT = MakeGroupOption({"buff"}, groups_options["DEATHKNIGHT"]),
-							--racials =         MakeGroupOption({"buff"}, groups_options["races"]),
+							DEATHKNIGHT = MakeGroupOption({"buff"}, groups_options["DEATHKNIGHT"])
 						},
 					},
 					castStartToggles = {

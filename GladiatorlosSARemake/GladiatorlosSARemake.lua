@@ -290,20 +290,29 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
         end
 
-        if event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
+        
+        local currentSpell = nil
+        -- Try find class spell
+        if self.spellList[engClass][spellID] ~= nil then
+            currentSpell = self.spellList[engClass][spellID]
+        -- Is pvp trinket?
+        elseif event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
             self:PlaySpell(engClass)
             return
-        end
-
-        -- Try find spell
-        local currentSpell = self.spellList[engClass][spellID]
-        if currentSpell == nil then
+        -- Try find racial spell
+        elseif self.spellList["RACIAL"][spellID] ~= nil then
+            currentSpell = self.spellList["RACIAL"][spellID]
+        -- Try find general spell
+        elseif self.spellList["GENERAL"][spellID] ~= nil then
+            currentSpell = self.spellList["GENERAL"][spellID]
+        else
+            -- nothing found then quit
             return
         end
 
+        -- check event and (is spell's group enable in options) and (is spell enable in options)
         if event == "SPELL_INTERRUPT " and gsadb.isInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
-        -- check event and (is spell's group enable in options) and (is spell enable in options)
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
