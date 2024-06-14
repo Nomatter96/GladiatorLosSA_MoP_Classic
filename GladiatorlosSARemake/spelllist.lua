@@ -69,8 +69,8 @@ function GladiatorlosSA:GetSpellList ()
 			[19503] = { soundName = "scatterShot",           type = "debuff"  },
 			[90337] = { soundName = "petStun",               type = "debuff"  },
 			[19577] = { soundName = "petStun",               type = "debuff"  },
+			[1499]  = { soundName = "freezingTrap",          type = "debuff"  },
 			[1513]  = { soundName = "scareBeast",            type = "success" },
-			[1499]  = { soundName = "freezingTrap",          type = "cast"    },
 			[60192] = { soundName = "freezingtrap",          type = "cast"    },
 			[23989] = { soundName = "readiness",             type = "cast"    },
 			[982]   = { soundName = "revivePet",             type = "cast"    }
