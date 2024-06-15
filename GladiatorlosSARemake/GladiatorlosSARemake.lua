@@ -124,6 +124,9 @@ local function InitializeDBSpellList()
     end
     for _,kind in pairs(self.spellList) do
         for id,body in pairs(kind) do
+            -- Calling that for initialize spell description. First calling get empty desc, then it's work fine. Why? Idk, need ask blizzard wtf with their API
+            GetSpellDescription(id)
+
             if body["type"] == "buff" then
                 if dbDefaults.profile["auraAppliedToggles"][id] == nil then
                     dbDefaults.profile["auraAppliedToggles"][id] = true

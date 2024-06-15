@@ -74,11 +74,8 @@ end
 local function CreateSpellTooltip(spellID)
 	local _, _, _, castTime, minRange, maxRange, _ = GetSpellInfo(spellID)
 	local cost = GetSpellPowerCost(spellID)
-	local spell  = Spell:CreateFromSpellID(spellID)
-	local spellDesc = ""
-	spell:ContinueWithCancelOnSpellLoad(function()
-		spellDesc = GetSpellDescription(spell:GetSpellID())
-	end)
+	local spellDesc = GetSpellDescription(spellID)
+
 	if spellDesc == "" then
 		spellDesc = "If you see this then use /reload please, because Blizzard's API doesn't work well"
 	end
