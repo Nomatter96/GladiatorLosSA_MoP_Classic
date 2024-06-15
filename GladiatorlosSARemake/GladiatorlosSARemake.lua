@@ -25,7 +25,7 @@ local GSA_LOCALEPATH = {
 self.GSA_LOCALEPATH = GSA_LOCALEPATH
 
 local GSA_LANGUAGE = {
-    ["GladiatorlosSA2\\Voice_enUS"] = L["English(female)"],
+    ["GladiatorlosSARemake\\Voice_enUS"] = L["English(female)"],
 }
 self.GSA_LANGUAGE = GSA_LANGUAGE
 
