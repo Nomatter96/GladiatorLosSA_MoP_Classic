@@ -12,19 +12,19 @@
 		When buff down, then addon add itself current suffix "Down" to sondName (like "starfall" + "Down" = "starfallDown")
 		Dont need copy past ability and rename soundName
 	2. debuff - add in "Buff Applied" in "Abilities"
-	3. cast - add in "Spell Cast" in "Abilities"
-	4. success - add in "Spell Cast" and "Cast Success" in "Abilities"
+	3. ability - add in "Spell Cast" in "Abilities"
+	4. cast - add in "Spell Cast" and "Cast Success" in "Abilities"
 	5. kick - you cant see that spell in "Abilities", but it is sound in battle when toggle "Enable interrupt" is active in "Abilities"
 
 	How to chose wich type for spell:
 	0. Open wowhead and define type of spell (buff, debuff or cast). (You can download addon idTip for easy finding spell id in game)
 	1. buff - enemy spell, wich add buff on him or his partners (like warrior's recklessness or shaman's earth Shield)
-		(but if this spell buff full party, then be better to chose "cast" type, because I guess addon start spamming spell sound)
+		(but if this spell buff full party, then be better to chose "ability" type, because I guess addon start spamming spell sound)
 	2. debuff - enemy spell, wich add debuff on you or your partners (like some stun or disarm)
-		(but if this spell debuff multiple targets, then be better to chose "cast" type, because I guess addon start spamming spell sound)
-	3. success - enemy spell, that have time cast and after you need hear "success" sound
+		(but if this spell debuff multiple targets, then be better to chose "ability" type, because I guess addon start spamming spell sound)
+	3. cast - enemy spell, that have time cast and after you need hear "cast" sound
 	4. kick - enemy spell, that interrupt cast. If interrupt is success, then you hear spell sound else nothing
-	5. cast - if none of the above list is fit, then chose this type 
+	5. ability - if none of the above list is fit, then chose this type 
 ]]
 
 function GladiatorlosSA:GetSpellList ()
@@ -70,11 +70,11 @@ function GladiatorlosSA:GetSpellList ()
 			[5211]  = { soundName = "bash",                  type = "debuff"  },
 			[22570] = { soundName = "maim",                  type = "debuff"  },
 			[9005]  = { soundName = "pounce",                type = "debuff"  },
-			[2637]  = { soundName = "hibernate",             type = "success" },
-			[33786] = { soundName = "cyclone",               type = "success" },
-			[740]   = { soundName = "tranquility",           type = "cast"    },
-			[33831] = { soundName = "forceOfNature",         type = "cast"    },
-			[5215]  = { soundName = "prowl",                 type = "cast"    },
+			[2637]  = { soundName = "hibernate",             type = "cast"    },
+			[33786] = { soundName = "cyclone",               type = "cast"    },
+			[740]   = { soundName = "tranquility",           type = "ability" },
+			[33831] = { soundName = "forceOfNature",         type = "ability" },
+			[5215]  = { soundName = "prowl",                 type = "ability" },
 			[93985] = { soundName = "skullBash",             type = "kick"    }
 		},
 
@@ -91,10 +91,10 @@ function GladiatorlosSA:GetSpellList ()
 			[90337] = { soundName = "petStun",               type = "debuff"  },
 			[19577] = { soundName = "petStun",               type = "debuff"  },
 			[1499]  = { soundName = "freezingTrap",          type = "debuff"  },
-			[1513]  = { soundName = "scareBeast",            type = "success" },
-			[60192] = { soundName = "freezingtrap",          type = "cast"    },
-			[23989] = { soundName = "readiness",             type = "cast"    },
-			[982]   = { soundName = "revivePet",             type = "cast"    }
+			[1513]  = { soundName = "scareBeast",            type = "cast"    },
+			[60192] = { soundName = "freezingtrap",          type = "ability" },
+			[23989] = { soundName = "readiness",             type = "ability" },
+			[982]   = { soundName = "revivePet",             type = "ability" }
 			
 		},
 
@@ -109,19 +109,19 @@ function GladiatorlosSA:GetSpellList ()
 			[45438] = { soundName = "iceBlock",              type = "buff"    },
 			[12051] = { soundName = "evocation",             type = "buff"    },
 			[44572] = { soundName = "deepFreeze",            type = "debuff"  },
-			[118]   = { soundName = "polymorph",             type = "success" },
-			[28271] = { soundName = "polymorph",             type = "success" },
-			[28272] = { soundName = "polymorph",             type = "success" },
-			[61780] = { soundName = "polymorph",             type = "success" },
-			[61721] = { soundName = "polymorph",             type = "success" },
-			[61305] = { soundName = "polymorph",             type = "success" },
-			[11129] = { soundName = "combustion",            type = "cast"    },
-			[2139]  = { soundName = "counterspell",          type = "cast"    },
-			[11958] = { soundName = "coldSnap",              type = "cast"    },
-			[55342] = { soundName = "mirrorImage",           type = "cast"    },
-			[31661] = { soundName = "dragonsBreath",         type = "cast"    },
-			[66]    = { soundName = "invisibility",          type = "cast"    },
-			[82676] = { soundName = "RingofFrost",           type = "cast"    }
+			[118]   = { soundName = "polymorph",             type = "cast"    },
+			[28271] = { soundName = "polymorph",             type = "cast"    },
+			[28272] = { soundName = "polymorph",             type = "cast"    },
+			[61780] = { soundName = "polymorph",             type = "cast"    },
+			[61721] = { soundName = "polymorph",             type = "cast"    },
+			[61305] = { soundName = "polymorph",             type = "cast"    },
+			[11129] = { soundName = "combustion",            type = "ability" },
+			[2139]  = { soundName = "counterspell",          type = "ability" },
+			[11958] = { soundName = "coldSnap",              type = "ability" },
+			[55342] = { soundName = "mirrorImage",           type = "ability" },
+			[31661] = { soundName = "dragonsBreath",         type = "ability" },
+			[66]    = { soundName = "invisibility",          type = "ability" },
+			[82676] = { soundName = "RingofFrost",           type = "ability" }
 		},
 
 		DEATHKNIGHT = {
@@ -138,12 +138,12 @@ function GladiatorlosSA:GetSpellList ()
 			[48265] = { soundName = "unholyPresence",        type = "buff"    },
 			[47476] = { soundName = "strangulate",           type = "debuff"  },
 			[91800] = { soundName = "petStun",               type = "debuff"  },
-			[49203] = { soundName = "hungeringCold",         type = "success" },
-			[49028] = { soundName = "dancingRuneWeapon",     type = "cast"    },
-			[48982] = { soundName = "runeTap",               type = "cast"    },
-			[47568] = { soundName = "empowerRuneWeapon",     type = "cast"    },
-			[49206] = { soundName = "summonGargoyle",        type = "cast"    },
-			[51052] = { soundName = "antiMagicZone",         type = "cast"    },
+			[49203] = { soundName = "hungeringCold",         type = "cast"    },
+			[49028] = { soundName = "dancingRuneWeapon",     type = "ability" },
+			[48982] = { soundName = "runeTap",               type = "ability" },
+			[47568] = { soundName = "empowerRuneWeapon",     type = "ability" },
+			[49206] = { soundName = "summonGargoyle",        type = "ability" },
+			[51052] = { soundName = "antiMagicZone",         type = "ability" },
 			[47528] = { soundName = "mindFreeze",            type = "kick"    }
 		},
 
@@ -171,14 +171,14 @@ function GladiatorlosSA:GetSpellList ()
 			[47585] = { soundName = "dispersion",            type = "buff"    },
 			[15487] = { soundName = "silence",               type = "debuff"  },
 			[64044] = { soundName = "psychicHorror",         type = "debuff"  },
-			[605]   = { soundName = "mindControl",           type = "success" },
-			[8129]  = { soundName = "manaBurn",              type = "cast"    },
-			[32375] = { soundName = "massDispel",            type = "cast"    },
-			[64843] = { soundName = "divineHymn",            type = "cast"    },
-			[9484]  = { soundName = "shackleUndead",         type = "cast"    },
-			[8122]  = { soundName = "fear",                  type = "cast"    },
-			[34433] = { soundName = "shadowFiend",           type = "cast"    },
-			[32379] = { soundName = "shadowWordDeath",       type = "cast"    }
+			[605]   = { soundName = "mindControl",           type = "cast"    },
+			[8129]  = { soundName = "manaBurn",              type = "ability" },
+			[32375] = { soundName = "massDispel",            type = "ability" },
+			[64843] = { soundName = "divineHymn",            type = "ability" },
+			[9484]  = { soundName = "shackleUndead",         type = "ability" },
+			[8122]  = { soundName = "fear",                  type = "ability" },
+			[34433] = { soundName = "shadowFiend",           type = "ability" },
+			[32379] = { soundName = "shadowWordDeath",       type = "ability" }
 		},
 
 		ROGUE = {
@@ -198,11 +198,11 @@ function GladiatorlosSA:GetSpellList ()
 			[1833]  = { soundName = "cheapShot",             type = "debuff" },
 			[6770]  = { soundName = "sap",                   type = "debuff" },
 			[703]   = { soundName = "garrote",               type = "debuff" },
-			[14177] = { soundName = "coldBlood",             type = "cast"   },
-			[1784]  = { soundName = "stealth",               type = "cast"   },
-			[14185] = { soundName = "preparation",           type = "cast"   },
-			[36554] = { soundName = "shadowstep",            type = "cast"   },
-			[1856]  = { soundName = "vanish",                type = "cast"   },
+			[14177] = { soundName = "coldBlood",             type = "ability"   },
+			[1784]  = { soundName = "stealth",               type = "ability"   },
+			[14185] = { soundName = "preparation",           type = "ability"   },
+			[36554] = { soundName = "shadowstep",            type = "ability"   },
+			[1856]  = { soundName = "vanish",                type = "ability"   },
 			[1766]  = { soundName = "kick",                  type = "kick"   }
 		},
 
@@ -212,11 +212,12 @@ function GladiatorlosSA:GetSpellList ()
 			[16188] = { soundName = "naturesSwiftness",      type = "buff"    },
 			[974]   = { soundName = "earthShield",           type = "buff"    },
 			[52127] = { soundName = "waterShield",           type = "buff"    },
-			[51514] = { soundName = "hex",                   type = "success" },
-			[8143]  = { soundName = "tremorTotem",           type = "cast"    },
-			[8177]  = { soundName = "groundingTotem",        type = "cast"    },
-			[16190] = { soundName = "manaTideTotem",         type = "cast"    },
-			[51533] = { soundName = "feralSpirit",           type = "cast"    },
+			[51514] = { soundName = "hex",                   type = "cast"    },
+			[8143]  = { soundName = "tremorTotem",           type = "ability" },
+			[8177]  = { soundName = "groundingTotem",        type = "ability" },
+			[16190] = { soundName = "manaTideTotem",         type = "ability" },
+			[98008] = { soundName = "spiritLink",            type = "ability" },
+			[51533] = { soundName = "feralSpirit",           type = "ability" },
 			[57994] = { soundName = "windShear",             type = "kick"    }
 		},
 
@@ -226,17 +227,17 @@ function GladiatorlosSA:GetSpellList ()
 			[79462] = { soundName = "demonsoul1",            type = "buff"    },
 			[6789]  = { soundName = "deathcoil",             type = "debuff"  },
 			[24259] = { soundName = "spellLock",             type = "debuff"  },
-			[5782]  = { soundName = "fear",                  type = "success" },
-			[50796] = { soundName = "chaosBolt",             type = "success" },
-			[6358]  = { soundName = "seduction",             type = "success" },
+			[5782]  = { soundName = "fear",                  type = "cast"    },
+			[50796] = { soundName = "chaosBolt",             type = "cast"    },
+			[6358]  = { soundName = "seduction",             type = "cast"    },
 			[688]   = { soundName = "summonImp",             type = "cast"    },
 			[697]   = { soundName = "summonVoidwalker",      type = "cast"    },
 			[712]   = { soundName = "summonSuccube",         type = "cast"    },
 			[691]   = { soundName = "summonFelhunter",       type = "cast"    },
 			[30146] = { soundName = "summonFelGuard",        type = "cast"    },
-			[5484]  = { soundName = "howlOfTerror",          type = "cast"    },
-			[48020] = { soundName = "demonicCircleTeleport", type = "cast"    },
-			[30283] = { soundName = "shadowfury",            type = "cast"    }
+			[5484]  = { soundName = "howlOfTerror",          type = "ability" },
+			[48020] = { soundName = "demonicCircleTeleport", type = "ability" },
+			[30283] = { soundName = "shadowfury",            type = "ability" }
 		},
 
 		WARRIOR = {
@@ -254,11 +255,11 @@ function GladiatorlosSA:GetSpellList ()
 			[12809] = { soundName = "concussionBlow",        type = "debuff"  },
 			[46968] = { soundName = "shockwave",             type = "debuff"  },
 			[85388] = { soundName = "throwdown",             type = "debuff"  },
-			[64382] = { soundName = "shatteringThrow",       type = "success" },
-			[5246]  = { soundName = "fear",                  type = "cast"    },
-			[2457]  = { soundName = "battleStance",          type = "cast"    },
-			[71]    = { soundName = "defensiveStance",       type = "cast"    },
-			[2458]  = { soundName = "berserkerStance",       type = "cast"    },
+			[64382] = { soundName = "shatteringThrow",       type = "cast"    },
+			[5246]  = { soundName = "fear",                  type = "ability" },
+			[2457]  = { soundName = "battleStance",          type = "ability" },
+			[71]    = { soundName = "defensiveStance",       type = "ability" },
+			[2458]  = { soundName = "berserkerStance",       type = "ability" },
 			[6552]  = { soundName = "pummel",                type = "kick"    }
 		}
 	}
@@ -278,11 +279,9 @@ function GladiatorlosSA:IsEpicBG(instanceMapID)
 end
 
 function GladiatorlosSA:FindSpellByID(spellID)
-	for _,kind in pairs(self.spellList) do
-        for id,body in pairs(kind) do
-			if id == spellID then
-				return body
-			end
+	for kind,_ in pairs(self.spellList) do
+		if self.spellList[kind][spellID] ~= nil then
+			return self.spellList[kind][spellID]
 		end
 	end
 	return nil

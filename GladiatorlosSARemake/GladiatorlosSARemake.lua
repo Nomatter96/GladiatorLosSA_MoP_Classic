@@ -91,9 +91,7 @@ local dbDefaults = {
         onlyTargetFocus = false,
         drinking = false,
         pvpTrinket = false,
-        interruptedfriendly = true,
-        
-        custom = {},
+        interruptedfriendly = true
     }    
 }
 
@@ -138,7 +136,7 @@ local function InitializeDBSpellList()
                 if dbDefaults.profile["auraAppliedToggles"][id] == nil then
                     dbDefaults.profile["auraAppliedToggles"][id] = true
                 end
-            elseif body["type"] == "success" then
+            elseif body["type"] == "cast" then
                 if dbDefaults.profile["castStartToggles"][id] == nil then
                     dbDefaults.profile["castStartToggles"][id] = true
                 end
@@ -146,8 +144,8 @@ local function InitializeDBSpellList()
                     dbDefaults.profile["castSuccessToggles"][id] = true
                 end
             else
-                if dbDefaults.profile["castStartToggles"][id] == nil then
-                    dbDefaults.profile["castStartToggles"][id] = true
+                if dbDefaults.profile["castSuccessToggles"][id] == nil then
+                    dbDefaults.profile["castSuccessToggles"][id] = true
                 end
             end
         end
@@ -293,7 +291,6 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
         end
 
-        
         local currentSpell = nil
         -- Try find class spell
         if self.spellList[engClass][spellID] ~= nil then
@@ -309,12 +306,11 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         elseif self.spellList["GENERAL"][spellID] ~= nil then
             currentSpell = self.spellList["GENERAL"][spellID]
         else
-            -- nothing found then quit
             return
         end
 
         -- check event and (is spell's group enable in options) and (is spell enable in options)
-        if event == "SPELL_INTERRUPT " and gsadb.isInterruptEnable and currentSpell["type"] == "kick" then
+        if event == "SPELL_INTERRUPT" and gsadb.isInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
@@ -324,7 +320,12 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_CAST_SUCCESS" and gsadb.isCastSuccessEnable and gsadb["castSuccessToggles"][spellID] then
             if self:Throttle(tostring(spellID).."default", 0.05) then return end
-            self:PlaySpell("success")
+            if currentSpell["type"] == "cast" then
+                self:PlaySpell("success")
+            else
+                self:PlaySpell(currentSpell["soundName"])
+            end
+            
         end
     elseif ((desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and IsGUIDInGroup(destGUID)) or (destGUID == UnitGUID("player"))) then
         -- get current spell
@@ -335,36 +336,6 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 
         if event == "SPELL_AURA_APPLIED" and currentSpell["type"] == "debuff" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
-        end
-    else
-        -- play custom spells
-        for k, css in pairs (gsadb.custom) do
-            if css.destuidfilter == "custom" and destName == css.destcustomname then
-                destuid.custom = true
-            else
-                destuid.custom = false
-            end
-            if css.sourceuidfilter == "custom" and sourceName == css.sourcecustomname then
-                sourceuid.custom = true
-            else
-                sourceuid.custom = false
-            end
-
-            if css.eventtype[event] and destuid[css.destuidfilter] and desttype[css.desttypefilter] and sourceuid[css.sourceuidfilter] and sourcetype[css.sourcetypefilter] and spellID == tonumber(css.spellid) then
-                if self:Throttle(tostring(spellID)..css.name, 0.1) then return end
-                --PlaySoundFile(css.soundfilepath, "Master")
-
-                if css.existingsound then -- Added to 2.3.3
-                    if (css.existinglist ~= nil and css.existinglist ~= ('')) then
-                        local soundz = LSM:Fetch('sound', css.existinglist)
-                        PlaySoundFile(soundz, gsadb.output_menu)
-                    else
-                        GSA.log (L["No sound selected for the Custom alert : |cffC41F4B"] .. css.name .. "|r.")
-                    end
-                else
-                    PlaySoundFile(css.soundfilepath, gsadb.output_menu)
-                end
-            end
         end
     end
 end

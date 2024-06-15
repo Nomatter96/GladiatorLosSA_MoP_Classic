@@ -405,8 +405,8 @@ function GSA:OnOptionCreate()
 					},
 					auraAppliedToggles = CreateTypeSpellsGroup( L["Buff Applied"],      1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
 					auraDownToggles    = CreateTypeSpellsGroup( L["Buff Down"],         2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
-					castStartToggles   = CreateTypeSpellsGroup( L["Spell Cast"],        3, function() return not gsadb.isCastStartEnable end,   {"cast", "success"} ),
-					castSuccessToggles = CreateTypeSpellsGroup( L["Special Abilities"], 4, function() return not gsadb.isCastSuccessEnable end, {"success"}         )
+					castStartToggles   = CreateTypeSpellsGroup( L["Spell Cast"],        3, function() return not gsadb.isCastStartEnable end,   {"cast"}            ),
+					castSuccessToggles = CreateTypeSpellsGroup( L["Special Abilities"], 4, function() return not gsadb.isCastSuccessEnable end, {"ability", "cast"} )
 				},
 			}
 		}
