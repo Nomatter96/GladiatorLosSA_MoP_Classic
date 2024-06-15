@@ -79,18 +79,39 @@ local function getOption(info)
 	end
 end
 
-local function spellOption(number, spellID)
+local function CreateSpellTooltip(spellID)
+	name, rank, icon, castTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(spellID)
+	cost = GetSpellPowerCost(spellID)
+	spellDesc = GetSpellDescription(spellID)
+	tooltip = ""
+	if cost["cost"] then
+		tooltip = tooltip .. cost["cost"] .. " " .. cost["name"] .. "|n"
+	end
+	if minRange ~= 0 or maxRange ~= 0 then
+		tooltip = tooltip .. minRange .. "-" .. maxRange .. " yd range |n"
+	end
+	if castTime ~= 0 then
+		tooltip = tooltip .. string.format("%.1f", castTime / 1000) .. " sec cast |n"
+	end
+	tooltip = tooltip .. "|cffFFF569" .. spellDesc .. "|r|n"
+	tooltip = tooltip .. "|n|cffFFF569SpellID: " .. spellID .. "|r"
+	return tooltip
+end
+
+local function CreateSpellToggle(number, spellID)
 	local spellname, _, icon = GetSpellInfo(spellID)	
 	if (spellname ~= nil) then
 		return {
 			type = 'toggle',
 			name = "\124T" .. icon .. ":24\124t" .. spellname,			
-			desc = function ()
-				GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
-				GameTooltip:SetHyperlink(GetSpellLink(spellID))
-				GameTooltip:Show()
-			end,
-			descStyle = "custom",
+			desc = CreateSpellTooltip(spellID),
+			--function ()
+			--	--GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+			--	--GameTooltip:SetSpellByID(spellID)
+			--	GameTooltip:SetHyperlink(GetSpellLink(spellID))
+			--	--GameTooltip:Show()
+			--end,
+			descStyle = "tooltip",
 			order = number
 		}
 	else
@@ -103,167 +124,52 @@ local function spellOption(number, spellID)
 	end
 end
 
-local function listOption(spellList, spellTypes)
+local function CreateSpellListToggle(spellList, spellTypes)
 	local args = {}
 	local n = 0
 	for id, body in pairs(spellList) do
 		for _, spellType in pairs(spellTypes) do
 			if spellType == body["type"] then
 				n = n + 1
-				rawset (args, tostring(id), spellOption(n, id))
-				GameTooltip:Hide()
+				rawset (args, tostring(id), CreateSpellToggle(n, id))
+				--GameTooltip:Hide()
 			end
 		end
 	end
 	return args
 end
 
-local function MakeGroupOption(spellTypes, groupOption)
+local function CreateClassSpellsGroup(spellTypes, groupOption)
+	local spellList = CreateSpellListToggle(GSA.spellList[groupOption["kind"]], spellTypes)
 	return {
 		type = 'group',
 		inline = true,
 		name = groupOption["name"],
 		order = groupOption["order"],
-		args = listOption(GSA.spellList[groupOption["kind"]], spellTypes),
+		args = spellList,
+		hidden = next(spellList) == nil
 	}
 end
 
-local function MakeGroupsSpells(aName)
+local function CreateTypeSpellsGroup(aName, aOrder, disabledFunction, filterType)
 	return {
 		type = 'group',
-		name = aName
-	}
-end
-
-function GSA:MakeCustomOption(key)
-	local options = self.options.args.custom.args
-	local db = gsadb.custom
-	options[key] = {
-		type = 'group',
-		name = function() return db[key].name end,
-		set = function(info, value) local name = info[#info] db[key][name] = value end,
-		get = function(info) local name = info[#info] return db[key][name] end,
-		order = db[key].order,
+		name = aName,
+		disabled = disabledFunction,
+		order = aOrder,
 		args = {
-			name = {
-				name = L["name"],
-				type = 'input',
-				set = function(info, value)
-					if db[value] then GSA.log(L["same name already exists"]) return end
-					db[value] = db[key]
-					db[value].name = value
-					db[value].order = #db + 1
-					db[value].soundfilepath = "Interface\\AddOns\\GladiatorlosSA2\\Voice_Custom\\"..value..".ogg"
-					db[key] = nil
-					options[value] = options[key]
-					options[key] = nil
-					key = value
-				end,
-				order = 10,
-			},
-			spellid = {
-				name = L["spellid"],
-				type = 'input',
-				order = 20,
-				pattern = "%d+$",
-			},
-			remove = {
-				type = 'execute',
-				order = 25,
-				name = L["Remove"],
-				confirm = true,
-				confirmText = L["Are you sure?"],
-				func = function() 
-					db[key] = nil
-					options[key] = nil
-				end,
-			},
-			existingsound = {
-				name = L["Use existing sound"],
-				type = 'toggle',
-				order = 41,
-			},
-			soundfilepath = {
-				name = L["file path"],
-				type = 'input',
-				width = 'double',
-				order = 26,
-				disabled = function() return db[key].existingsound end,
-			},
-			test = {
-				type = 'execute',
-				order = 28,
-				name = L["Test"],
-				disabled = function() return db[key].existingsound end,
-				func = function() PlaySoundFile(db[key].soundfilepath, "Master") end,
-			},
-			NewLinetest = {
-					type= 'description',
-					order = 29,
-					name= '',
-			},
-			existinglist = {
-				name = L["choose a sound"],
-				type = 'select',
-				dialogControl = 'LSM30_Sound',
-				values =  LSM:HashTable("sound"),
-				disabled = function() return not db[key].existingsound end,
-				order = 40,
-			},
-			NewLine3 = {
-				type= 'description',
-				order = 45,
-				name= '',
-			},
-			eventtype = {
-				type = 'multiselect',
-				order = 50,
-				name = L["event type"],
-				values = self.GSA_EVENT,
-				get = function(info, k) return db[key].eventtype[k] end,
-				set = function(info, k, v) db[key].eventtype[k] = v end,
-			},
-			sourcetypefilter = {
-				type = 'select',
-				order = 59,
-				name = L["Source type"],
-				values = self.GSA_TYPE,
-			},
-			desttypefilter = {
-				type = 'select',
-				order = 60,
-				name = L["Dest type"],
-				values = self.GSA_TYPE,
-			},
-			sourceuidfilter = {
-				type = 'select',
-				order = 61,
-				name = L["Source unit"],
-				values = self.GSA_UNIT,
-			},
-			sourcecustomname = {
-				type= 'input',
-				order = 62,
-				name= L["Custom unit name"],
-				disabled = function() return not (db[key].sourceuidfilter == "custom") end,
-			},
-			destuidfilter = {
-				type = 'select',
-				order = 65,
-				name = L["Dest unit"],
-				values = self.GSA_UNIT,
-			},
-			destcustomname = {
-				type= 'input',
-				order = 68,
-				name = L["Custom unit name"],
-				disabled = function() return not (db[key].destuidfilter == "custom") end,
-			},
-			--[[NewLine5 = {
-				type = 'header',
-				order = 69,
-				name = "",
-			},]]
+			GENERAL     = CreateClassSpellsGroup(filterType, groups_options["GENERAL"]),
+			RACIAL      = CreateClassSpellsGroup(filterType, groups_options["RACIAL"]),
+			DRUID       = CreateClassSpellsGroup(filterType, groups_options["DRUID"]),
+			HUNTER      = CreateClassSpellsGroup(filterType, groups_options["HUNTER"]),
+			MAGE        = CreateClassSpellsGroup(filterType, groups_options["MAGE"]),
+			PALADIN     = CreateClassSpellsGroup(filterType, groups_options["PALADIN"]),
+			PRIEST	    = CreateClassSpellsGroup(filterType, groups_options["PRIEST"]),
+			ROGUE       = CreateClassSpellsGroup(filterType, groups_options["ROGUE"]),
+			SHAMAN	    = CreateClassSpellsGroup(filterType, groups_options["SHAMAN"]),
+			WARLOCK	    = CreateClassSpellsGroup(filterType, groups_options["WARLOCK"]),
+			WARRIOR	    = CreateClassSpellsGroup(filterType, groups_options["WARRIOR"]),
+			DEATHKNIGHT	= CreateClassSpellsGroup(filterType, groups_options["DEATHKNIGHT"])
 		}
 	}
 end
@@ -508,142 +414,20 @@ function GSA:OnOptionCreate()
 							}
 						}
 					},
-				auraAppliedToggles = {
-					type = 'group',
-					name = L["Buff Applied"],
-					disabled = function() return not gsadb.isAuraAppliedEnable end,
-					order = 1,
-					args = {
-						GENERAL     = MakeGroupOption({"buff", "debuff"}, groups_options["GENERAL"]),
-						RACIAL      = MakeGroupOption({"buff", "debuff"}, groups_options["RACIAL"]),
-						DRUID       = MakeGroupOption({"buff", "debuff"}, groups_options["DRUID"]),
-						HUNTER      = MakeGroupOption({"buff", "debuff"}, groups_options["HUNTER"]),
-						MAGE        = MakeGroupOption({"buff", "debuff"}, groups_options["MAGE"]),
-						PALADIN     = MakeGroupOption({"buff", "debuff"}, groups_options["PALADIN"]),
-						PRIEST	    = MakeGroupOption({"buff", "debuff"}, groups_options["PRIEST"]),
-						ROGUE       = MakeGroupOption({"buff", "debuff"}, groups_options["ROGUE"]),
-						SHAMAN	    = MakeGroupOption({"buff", "debuff"}, groups_options["SHAMAN"]),
-						WARLOCK	    = MakeGroupOption({"buff", "debuff"}, groups_options["WARLOCK"]),
-						WARRIOR	    = MakeGroupOption({"buff", "debuff"}, groups_options["WARRIOR"]),
-						DEATHKNIGHT	= MakeGroupOption({"buff", "debuff"}, groups_options["DEATHKNIGHT"])
-					},
+					auraAppliedToggles = CreateTypeSpellsGroup( L["Buff Applied"],      1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
+					auraDownToggles    = CreateTypeSpellsGroup( L["Buff Down"],         2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
+					castStartToggles   = CreateTypeSpellsGroup( L["Spell Cast"],        3, function() return not gsadb.isCastStartEnable end,   {"cast", "success"} ),
+					castSuccessToggles = CreateTypeSpellsGroup( L["Special Abilities"], 4, function() return not gsadb.isCastSuccessEnable end, {"success"}         )
 				},
-				auraDownToggles = {
-						type = 'group',
-						name = L["Buff Down"],
-						disabled = function() return not gsadb.isAuraDownEnable end,
-						order = 2,
-						args = {
-							GENERAL     = MakeGroupOption({"buff"}, groups_options["GENERAL"]),
-							RACIAL      = MakeGroupOption({"buff"}, groups_options["RACIAL"]),
-							DRUID       = MakeGroupOption({"buff"}, groups_options["DRUID"]),
-							HUNTER      = MakeGroupOption({"buff"}, groups_options["HUNTER"]),
-							MAGE        = MakeGroupOption({"buff"}, groups_options["MAGE"]),
-							PALADIN     = MakeGroupOption({"buff"}, groups_options["PALADIN"]),
-							PRIEST	    = MakeGroupOption({"buff"}, groups_options["PRIEST"]),
-							ROGUE       = MakeGroupOption({"buff"}, groups_options["ROGUE"]),
-							SHAMAN	    = MakeGroupOption({"buff"}, groups_options["SHAMAN"]),
-							WARLOCK     = MakeGroupOption({"buff"}, groups_options["WARLOCK"]),
-							WARRIOR	    = MakeGroupOption({"buff"}, groups_options["WARRIOR"]),
-							DEATHKNIGHT = MakeGroupOption({"buff"}, groups_options["DEATHKNIGHT"])
-						},
-					},
-					castStartToggles = {
-						type = 'group',
-						name = L["Spell Cast"],
-						disabled = function() return not gsadb.isCastStartEnable end,
-						order = 2,
-						args = {
-							DRUID       = MakeGroupOption({"cast", "success", "pet"}, groups_options["DRUID"]),
-							HUNTER      = MakeGroupOption({"cast", "success", "pet"}, groups_options["HUNTER"]),
-							MAGE        = MakeGroupOption({"cast", "success", "pet"}, groups_options["MAGE"]),
-							PALADIN     = MakeGroupOption({"cast", "success", "pet"}, groups_options["PALADIN"]),
-							PRIEST	    = MakeGroupOption({"cast", "success", "pet"}, groups_options["PRIEST"]),
-							ROGUE       = MakeGroupOption({"cast", "success", "pet"}, groups_options["ROGUE"]),
-							SHAMAN	    = MakeGroupOption({"cast", "success", "pet"}, groups_options["SHAMAN"]),
-							WARLOCK     = MakeGroupOption({"cast", "success", "pet"}, groups_options["WARLOCK"]),
-							WARRIOR	    = MakeGroupOption({"cast", "success", "pet"}, groups_options["WARRIOR"]),
-							DEATHKNIGHT = MakeGroupOption({"cast", "success", "pet"}, groups_options["DEATHKNIGHT"]),
-						},
-					},
-					castSuccessToggles = {
-						type = 'group',
-						name = L["Special Abilities"],
-						disabled = function() return not gsadb.isCastSuccessEnable end,
-						order = 3,
-						args = {
-							DRUID       = MakeGroupOption({"success"}, groups_options["DRUID"]),
-							HUNTER      = MakeGroupOption({"success"}, groups_options["HUNTER"]),
-							MAGE        = MakeGroupOption({"success"}, groups_options["MAGE"]),
-							PRIEST	    = MakeGroupOption({"success"}, groups_options["PRIEST"]),
-							SHAMAN	    = MakeGroupOption({"success"}, groups_options["SHAMAN"]),
-							WARLOCK     = MakeGroupOption({"success"}, groups_options["WARLOCK"]),
-							WARRIOR	    = MakeGroupOption({"success"}, groups_options["WARRIOR"]),
-							DEATHKNIGHT = MakeGroupOption({"success"}, groups_options["DEATHKNIGHT"]),
-							--racials = MakeGroupOption("castSuccess", groups_options["races"]),
-						}
-					}
-				},
-			},
-			custom = {
-				type = 'group',
-				name = L["Custom"],
-				desc = L["Custom Spell"],
-				--set = function(info, value) local name = info[#info] gsadb.custom[name] = value end,
-				--get = function(info) local name = info[#info]	return gsadb.custom[name] end,
-				order = 4,
-				args = {
-					newalert = {
-						type = 'execute',
-						name = L["New Sound Alert"],
-						order = -1,
-						--[[args = {
-							newname = {
-								type = 'input',
-								name = "name",
-								set = function(info, value) local name = info[#info] if gsadb.custom[vlaue] then log("name already exists") return end gsadb.custom[vlaue]={} end,			
-							}]]
-						func = function()
-							gsadb.custom[L["New Sound Alert"]] = {
-								name = L["New Sound Alert"],
-								soundfilepath = "Interface\\AddOns\\GladiatorlosSA2\\Voice_Custom\\Will-Demo.ogg",--"..L["New Sound Alert"]..".ogg",
-								sourceuidfilter = "any",
-								destuidfilter = "any",
-								eventtype = {
-									SPELL_CAST_SUCCESS = true,
-									SPELL_CAST_START = false,
-									SPELL_AURA_APPLIED = false,
-									SPELL_AURA_REMOVED = false,
-									SPELL_INTERRUPT = false,
-								},
-								sourcetypefilter = COMBATLOG_FILTER_EVERYTHING,
-								desttypefilter = COMBATLOG_FILTER_EVERYTHING,
-								order = 0,
-							}
-							self:MakeCustomOption(L["New Sound Alert"])
-						end,
-						disabled = function()
-							if gsadb.custom[L["New Sound Alert"]] then
-								return true
-							else
-								return false
-							end
-						end,
-					}
-				}
 			}
 		}
 	}
 
-	for k, v in pairs(gsadb.custom) do
-		self:MakeCustomOption(k)
-	end	
 	AceConfig:RegisterOptionsTable("GladiatorlosSA", self.options)
 	self:AddOption(L["General"], "general")
 	self.options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db1)
 	self.options.args.profiles.order = -1
 	
 	self:AddOption(L["Abilities"], "spells")
-	self:AddOption(L["Custom"], "custom")
 	self:AddOption(L["Profiles"], "profiles")
 end

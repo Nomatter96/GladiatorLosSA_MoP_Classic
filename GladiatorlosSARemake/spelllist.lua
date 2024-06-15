@@ -252,7 +252,7 @@ function GladiatorlosSA:GetSpellList ()
 			[12328] = { soundName = "sweepingStrikes",       type = "buff"    },
 			[676]   = { soundName = "disarm",                type = "debuff"  },
 			[12809] = { soundName = "concussionBlow",        type = "debuff"  },
-			[12809] = { soundName = "shockwave",             type = "debuff"  },
+			[46968] = { soundName = "shockwave",             type = "debuff"  },
 			[85388] = { soundName = "throwdown",             type = "debuff"  },
 			[64382] = { soundName = "shatteringThrow",       type = "success" },
 			[5246]  = { soundName = "fear",                  type = "cast"    },
