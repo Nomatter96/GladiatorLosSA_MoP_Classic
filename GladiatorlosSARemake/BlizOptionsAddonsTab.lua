@@ -35,6 +35,10 @@ function GladiatorlosSA:InitializeOptionTable()
             self:OnOptionCreate()
             options.args.load.disabled = true
             GameTooltip:Hide()
+
+            -- Reopen Addon Option Menu
+            ToggleGameMenu(); StaticPopup1:Hide() -- BugSack don't like this, but it's ok
+            InterfaceOptionsFrame_OpenToCategory(GladiatorlosSA)
         end,
         handler = GSA,
     }

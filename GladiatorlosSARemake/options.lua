@@ -24,15 +24,7 @@ local groups_options = {
 }
 
 function GSA:ShowConfig()
-	for i=1,2 do InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("GladiatorlosSA2", "Title")) end -- ugly fix
-
-end
-
-function GSA:ShowConfig2() -- ***** @
-	if options_created == false then
-		self:OnOptionCreate()
-	end
-	AceConfigDialog:Open("GladiatorlosSA2")
+	InterfaceOptionsFrame_OpenToCategory(GladiatorlosSA)
 end
 
 function GSA:ChangeProfile()
@@ -133,7 +125,6 @@ local function CreateSpellListToggle(spellList, spellTypes)
 			if spellType == body["type"] then
 				n = n + 1
 				rawset (args, tostring(id), CreateSpellToggle(n, id))
-				--GameTooltip:Hide()
 			end
 		end
 	end

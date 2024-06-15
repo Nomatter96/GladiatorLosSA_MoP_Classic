@@ -1,7 +1,7 @@
 ﻿local L = LibStub("AceLocale-3.0"):NewLocale("GladiatorlosSA", "enUS",true)
 if not L then return end
 
-L["GSA_VERSION"] = "|cffFF7D0A CATA-2.0 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
+L["GSA_VERSION"] = "|cffFF7D0A CATA-2.0.1 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
 
 L["Spell_CastSuccess"] = "On Successful Cast"
 L["Spell_CastStart"] = "On Beginning of Spell Cast"
@@ -46,7 +46,7 @@ L["Dest type"] = "Destination Type"
 
 L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing many important spells cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569Cataclysm support by|r |cFF00FF96Nomatter|r|n"
 L["PVP Voice Alert"] = true
-L["Load Configuration"] = "<-- Load GSA2 Menus"
+L["Load Configuration"] = "<-- Load GSA Menus"
 L["Load Configuration Options"] = true
 L["General"] = true
 L["General options"] = "General Options"
