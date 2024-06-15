@@ -80,10 +80,17 @@ local function getOption(info)
 end
 
 local function CreateSpellTooltip(spellID)
-	name, rank, icon, castTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(spellID)
-	cost = GetSpellPowerCost(spellID)
-	spellDesc = GetSpellDescription(spellID)
-	tooltip = ""
+	local _, _, _, castTime, minRange, maxRange, _ = GetSpellInfo(spellID)
+	local cost = GetSpellPowerCost(spellID)
+	local spell  = Spell:CreateFromSpellID(spellID)
+	local spellDesc = ""
+	spell:ContinueWithCancelOnSpellLoad(function()
+		spellDesc = GetSpellDescription(spell:GetSpellID())
+	end)
+	if spellDesc == "" then
+		spellDesc = "If you see this then use /reload please, because Blizzard's API doesn't work well"
+	end
+	local tooltip = ""
 	if cost["cost"] then
 		tooltip = tooltip .. cost["cost"] .. " " .. cost["name"] .. "|n"
 	end
@@ -105,12 +112,6 @@ local function CreateSpellToggle(number, spellID)
 			type = 'toggle',
 			name = "\124T" .. icon .. ":24\124t" .. spellname,			
 			desc = CreateSpellTooltip(spellID),
-			--function ()
-			--	--GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
-			--	--GameTooltip:SetSpellByID(spellID)
-			--	GameTooltip:SetHyperlink(GetSpellLink(spellID))
-			--	--GameTooltip:Show()
-			--end,
 			descStyle = "tooltip",
 			order = number
 		}
