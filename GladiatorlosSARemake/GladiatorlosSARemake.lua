@@ -254,10 +254,6 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
     -- Area check passed, fetch combat event payload.
     local _, event, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, spellID, spellName, _, t = CombatLogGetCurrentEventInfo()
 
-    if (event == "SPELL_INTERRUPT" and sourceGUID == UnitGUID("player")) then
-        print(event, spellID, spellName)
-    end
-
     if not GSA_EVENT[event] then return end
 
     if (destFlags) then
@@ -344,9 +340,6 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
     -- Check Dest is enemy
     elseif (desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (IsGUIDInGroup(sourceGUID) or sourceGUID == UnitGUID("player"))) then
         if event == "SPELL_INTERRUPT" and gsadb.IsFriendUseInterruptSuccessEnable and currentSpell["type"] == "kick" then
-            if (sourceGUID == UnitGUID("player")) then
-                print("YES, your kik WORK")
-            end
             self:PlaySpell("Lockout")
         end
 
