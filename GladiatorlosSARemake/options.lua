@@ -105,7 +105,7 @@ local function CreateSpellToggle(number, spellID)
 			order = number
 		}
 	else
-		GSA.log("spell id: " .. spellID .. " is invalid")
+		GSA:log("spell id: " .. spellID .. " is invalid")
 		return {
 			type = 'toggle',
 			name = "Unknown Spell; ID:" .. spellID,	
@@ -358,12 +358,6 @@ function GSA:OnOptionCreate()
 								desc = L["Check this will disable alert for instant-cast important abilities"],
 								order = 4,
 							}
-							--interruptedfriendly = {
-							--	type = 'toggle',
-							--	name = L["FriendlyInterrupted"],
-							--	desc = L["FriendlyInterruptedDesc"],
-							--	order = 5,
-							--}
 						}
 					},
 					generalOptions = {
@@ -396,10 +390,15 @@ function GSA:OnOptionCreate()
 								desc = L["Also announce class name with trinket alert when hostile targets use PvP trinket in arena"],
 								order = 4
 							},
-							isInterruptEnable = {
+							IsEnemyUseInterruptEnable = {
 								type = 'toggle',
-								name = L["Enable interrupt"],
-								order = 5,
+								name = L["Enemy Use Interrupt"],
+								order = 5
+							},
+							IsFriendUseInterruptSuccessEnable = {
+								type = 'toggle',
+								name = L["Friend use interrupt successful"],
+								order = 6
 							}
 						}
 					},

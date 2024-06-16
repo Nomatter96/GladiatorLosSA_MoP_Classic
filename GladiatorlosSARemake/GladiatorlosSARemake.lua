@@ -9,7 +9,7 @@ local GSA_TEXT = "|cff69CCF0GladiatorlosSARemake|r (|cffFFF569/gsa|r)"
 local GSA_TEST_BRANCH = ""
 local GSA_AUTHOR = " "
 local gsadb
-local soundz,sourcetype,sourceuid,desttype,destuid = {},{},{},{},{}
+local soundz, sourcetype, desttype, destuid = {},{},{},{},{}
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local isCanPlaySound = false
 local debugMode = 0
@@ -81,7 +81,8 @@ local dbDefaults = {
         isAuraDownEnable = true,
         isCastStartEnable = true,
         isCastSuccessEnable = true,
-        isInterruptEnable = true,
+        IsEnemyUseInterruptEnable = true,
+        IsFriendUseInterruptSuccessEnable = true,
 
         auraAppliedToggles = {},
         auraDownToggles = {},
@@ -125,25 +126,23 @@ function GladiatorlosSA_wait(delay, func, ...)
   return true;
 end
 
- GSA.log = function(msg) DEFAULT_CHAT_FRAME:AddMessage("|cFF33FF22GladiatorlosSA|r: "..msg) end
-
  -- LSM BEGIN / inspired from MSBTMedia.lua
- local function RegisterSound(soundName, soundPath)
+local function RegisterSound(soundName, soundPath)
     if (type(soundName) ~= "string" or type(soundPath) ~= "string") then return end
     if (soundName == "" or soundPath == "") then return end
 
     soundz[soundName] = soundPath
     LSM:Register("sound", soundName, soundPath)
- end
+end
 
- for soundName, soundPath in pairs(LSM_GSA_SOUNDFILES) do RegisterSound(soundName, soundPath) end
- for index, soundName in pairs(LSM:List("sound")) do soundz[soundName] = LSM:Fetch("sound", soundName) end
+for soundName, soundPath in pairs(LSM_GSA_SOUNDFILES) do RegisterSound(soundName, soundPath) end
+for index, soundName in pairs(LSM:List("sound")) do soundz[soundName] = LSM:Fetch("sound", soundName) end
 
- local function LSMRegistered(event, mediaType, name)
-    if (mediaType == "sound") then
-        soundz[name] = LSM:Fetch(mediaType, name)
-    end
- end
+local function LSMRegistered(event, mediaType, name)
+   if (mediaType == "sound") then
+       soundz[name] = LSM:Fetch(mediaType, name)
+   end
+end
  -- LSM END
 
 local function InitializeDBSpellList()
@@ -186,6 +185,10 @@ local function InitializeDBSpellList()
     self.db1.RegisterCallback(self, "OnProfileCopied", "ChangeProfile")
     self.db1.RegisterCallback(self, "OnProfileReset", "ChangeProfile")
     gsadb = self.db1.profile
+end
+
+function GladiatorlosSA:log(msg)
+    DEFAULT_CHAT_FRAME:AddMessage("|cFF33FF22GladiatorlosSA|r: "..msg)
 end
 
 function GladiatorlosSA:OnInitialize()
@@ -295,18 +298,12 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             --print("sourcetype:"..k.."="..(sourcetype[k] or "nil"))
         end
     end
-    if (sourceGUID) then
-        for k in pairs(GSA_UNIT) do
-            sourceuid[k] = (UnitGUID(k) == sourceGUID)
-            --print("sourceuid:"..k.."="..(sourceuid[k] and "true" or "false"))
-        end
-    else
-        for k in pairs(GSA_UNIT) do
-            sourceuid[k] = nil
-            --print("sourceuid:"..k.."="..(sourceuid[k] and "true" or "false"))
-        end
+
+    -- get current spell
+    local currentSpell = self:FindSpellByID(spellID)
+    if currentSpell == nil then 
+        return
     end
-    sourceuid.any = true
 
     -- check isEnemy and target/focus settings
     if (sourcetype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (not gsadb.onlyTargetFocus or destuid.target or destuid.focus)) then
@@ -320,28 +317,15 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
         end
 
-        local currentSpell = nil
-        -- Try find class spell
-        if self.spellList[engClass][spellID] ~= nil then
-            currentSpell = self.spellList[engClass][spellID]
-        -- Is pvp trinket?
-        elseif event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
+        if event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
             self:PlaySpell(engClass)
-            return
-        -- Try find racial spell
-        elseif self.spellList["RACIAL"][spellID] ~= nil then
-            currentSpell = self.spellList["RACIAL"][spellID]
-        -- Try find general spell
-        elseif self.spellList["GENERAL"][spellID] ~= nil then
-            currentSpell = self.spellList["GENERAL"][spellID]
-        else
             return
         end
 
         -- check event and (is spell's group enable in options) and (is spell enable in options)
-        if event == "SPELL_CAST_SUCCESS" and gsadb.isInterruptEnable and currentSpell["type"] == "kick" then
+        if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
-        elseif event == "SPELL_INTERRUPT" and gsadb.isInterruptEnable and currentSpell["type"] == "kick" then
+        elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             GladiatorlosSA_wait(0.5, function() self:PlaySpell("interrupted") end)
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
@@ -356,15 +340,12 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             else
                 self:PlaySpell(currentSpell["soundName"])
             end
-            
+        end
+    elseif (desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS]) then
+        if event == "SPELL_INTERRUPT" and gsadb.IsFriendUseInterruptSuccessEnable and currentSpell["type"] == "kick" then
+            self:PlaySpell("Lockout")
         end
     elseif ((desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and IsGUIDInGroup(destGUID)) or (destGUID == UnitGUID("player"))) then
-        -- get current spell
-        local currentSpell = self:FindSpellByID(spellID)
-        if currentSpell == nil then 
-            return
-        end
-
         if event == "SPELL_AURA_APPLIED" and currentSpell["type"] == "debuff" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         end
