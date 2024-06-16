@@ -338,7 +338,7 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         end
     
     -- Check Dest is enemy
-    elseif (desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS]) then
+    elseif (desttype[COMBATLOG_FILTER_HOSTILE_UNITS] and (IsGUIDInGroup(sourceGUID) or sourceGUID == UnitGUID("player"))) then
         if event == "SPELL_INTERRUPT" and gsadb.IsFriendUseInterruptSuccessEnable and currentSpell["type"] == "kick" then
             self:PlaySpell("Lockout")
         end
