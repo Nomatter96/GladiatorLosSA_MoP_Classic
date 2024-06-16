@@ -287,6 +287,7 @@ function GladiatorlosSA:FindSpellByID(spellID)
 	return nil
 end
 
+-- It's not using for now, but may be some day
 function GladiatorlosSA:GetClassByPet(petGUID)
 	local unitType, _, _, _, _, petID, _ = strsplit("-", petGUID)
 	if (unitType ~= "Pet") then

@@ -81,8 +81,6 @@ local dbDefaults = {
         isAuraDownEnable = true,
         isCastStartEnable = true,
         isCastSuccessEnable = true,
-        IsEnemyUseInterruptEnable = true,
-        IsFriendUseInterruptSuccessEnable = true,
 
         auraAppliedToggles = {},
         auraDownToggles = {},
@@ -92,7 +90,9 @@ local dbDefaults = {
         onlyTargetFocus = false,
         drinking = false,
         pvpTrinket = false,
-        interruptedfriendly = true
+        IsEnemyUseInterruptEnable = true,
+        IsFriendUseInterruptSuccessEnable = true,
+        IsSoundSuccessCastEnable = true
     }    
 }
 
@@ -169,9 +169,6 @@ local function InitializeDBSpellList()
                 if dbDefaults.profile["castStartToggles"][id] == nil then
                     dbDefaults.profile["castStartToggles"][id] = true
                 end
-                if dbDefaults.profile["castSuccessToggles"][id] == nil then
-                    dbDefaults.profile["castSuccessToggles"][id] = true
-                end
             else
                 if dbDefaults.profile["castSuccessToggles"][id] == nil then
                     dbDefaults.profile["castSuccessToggles"][id] = true
@@ -213,9 +210,9 @@ function GladiatorlosSA:OnInitialize()
  end
 
 -- play sound by file name
- function GSA:PlaySound(fileName)
-     PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName .. ".ogg", gsadb.output_menu)
- end
+function GSA:PlaySound(fileName)
+    PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName .. ".ogg", gsadb.output_menu)
+end
 
  function GladiatorlosSA:PLAYER_ENTERING_WORLD()
      self:CheckCanPlaySound()
@@ -249,12 +246,6 @@ function GSA:CheckCanPlaySound()
         (currentZoneType == "arena" and gsadb.arena)                                              -- Arena
 end
 
- function GSA:SpammyDebug()
-     -- This shouldn't be used 99.9% of the time.
-     print(sourceName,sourceGUID,destName,destGUID,destFlags,"|cffFF7D0A" .. event.. "|r",spellName,"|cffFF7D0A" .. spellID.. "|r")
-     print("|cffff0000timestamp|r",timestamp,"|cffff0000event|r",event,"|cffff0000hideCaster|r",hideCaster,"|cffff0000sourceGUID|r",sourceGUID,"|cffff0000sourceName|r",sourceName,"|cffff0000sourceFlags|r",sourceFlags,"|cffff0000sourceFlags2|r",sourceFlags2,"|cffff0000destGUID|r",destGUID,"|cffff0000destName|r",destName,"|cffff0000destFlags|r",destFlags,"|cffff0000destFlags2|r",destFlags2,"|cffff0000spellID|r",spellID,"|cffff0000spellName|r",spellName)
- end
-
 function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
     if (GetZonePVPInfo() == "sanctuary") or (not isCanPlaySound) then
         return
@@ -262,7 +253,7 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 
     -- Area check passed, fetch combat event payload.
     local _, event, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, spellID, spellName, _, t = CombatLogGetCurrentEventInfo()
-    
+
     if not GSA_EVENT[event] then return end
 
     if (destFlags) then
@@ -299,52 +290,62 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         end
     end
 
+    -- First check is PvPTrinket
+    if sourcetype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
+        _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
+        self:PlaySpell(engClass)
+        return
+    end
+
     -- get current spell
     local currentSpell = self:FindSpellByID(spellID)
     if currentSpell == nil then 
         return
     end
 
-    -- check isEnemy and target/focus settings
+    -- check Source is Enemy and target/focus settings
     if (sourcetype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (not gsadb.onlyTargetFocus or destuid.target or destuid.focus)) then
         local unitType = strsplit("-", sourceGUID)
         if unitType ~= "Player" and unitType ~= "Pet" then
             return
         end
-        -- Try get class by pet or it is player
-        local engClass = self:GetClassByPet(sourceGUID)
-        if engClass == nil then
-            _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
-        end
-
-        if event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
-            self:PlaySpell(engClass)
-            return
-        end
 
         -- check event and (is spell's group enable in options) and (is spell enable in options)
+        -- Check kick
         if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             GladiatorlosSA_wait(0.5, function() self:PlaySpell("interrupted") end)
+        
+        -- Check buff and debuff
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"] .. "Down")
-        elseif event == "SPELL_CAST_START" and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then
-            self:PlaySpell(currentSpell["soundName"])
-        elseif event == "SPELL_CAST_SUCCESS" and gsadb.isCastSuccessEnable and gsadb["castSuccessToggles"][spellID] then
-            if self:Throttle(tostring(spellID).."default", 0.05) then return end
-            if currentSpell["type"] == "cast" then
+        
+        -- Check cast spells
+        elseif (event == "SPELL_CAST_START" or event == "SPELL_CAST_SUCCESS") and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then
+            if event == "SPELL_CAST_START" then
+                self:PlaySpell(currentSpell["soundName"])
+            elseif gsadb.IsSoundSuccessCastEnable then
+                if self:Throttle(tostring(spellID).."default", 0.05) then return end
                 self:PlaySpell("success")
             else
                 self:PlaySpell(currentSpell["soundName"])
             end
+
+        -- Check simple spells without cast
+        elseif event == "SPELL_CAST_SUCCESS" and gsadb.isCastSuccessEnable and gsadb["castSuccessToggles"][spellID] then
+            self:PlaySpell(currentSpell["soundName"])
         end
+    
+    -- Check Dest is enemy
     elseif (desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS]) then
         if event == "SPELL_INTERRUPT" and gsadb.IsFriendUseInterruptSuccessEnable and currentSpell["type"] == "kick" then
             self:PlaySpell("Lockout")
         end
+
+    -- Check Dest is friend
     elseif ((desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and IsGUIDInGroup(destGUID)) or (destGUID == UnitGUID("player"))) then
         if event == "SPELL_AURA_APPLIED" and currentSpell["type"] == "debuff" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])

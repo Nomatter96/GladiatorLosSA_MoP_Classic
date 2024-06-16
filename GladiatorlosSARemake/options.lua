@@ -378,10 +378,9 @@ function GSA:OnOptionCreate()
 								desc = L["In arena, alert when enemy is drinking"],
 								order = 2
 							},
-							resurrection = {
+							IsSoundSuccessCastEnable = {
 								type = 'toggle',
-								name = L["Resurrection"],
-								desc = L["Resurrection_Desc"],
+								name = L["Enable Sound Successfull Cast"],
 								order = 3
 							},
 							pvpTrinket = {
@@ -392,7 +391,7 @@ function GSA:OnOptionCreate()
 							},
 							IsEnemyUseInterruptEnable = {
 								type = 'toggle',
-								name = L["Enemy Use Interrupt"],
+								name = L["Enable Sound Successfull Cast"],
 								order = 5
 							},
 							IsFriendUseInterruptSuccessEnable = {
@@ -402,11 +401,11 @@ function GSA:OnOptionCreate()
 							}
 						}
 					},
-					auraAppliedToggles = CreateTypeSpellsGroup( L["Buff Applied"],      1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
-					auraDownToggles    = CreateTypeSpellsGroup( L["Buff Down"],         2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
-					castStartToggles   = CreateTypeSpellsGroup( L["Spell Cast"],        3, function() return not gsadb.isCastStartEnable end,   {"cast"}            ),
-					castSuccessToggles = CreateTypeSpellsGroup( L["Special Abilities"], 4, function() return not gsadb.isCastSuccessEnable end, {"ability", "cast"} )
-				},
+					auraAppliedToggles = CreateTypeSpellsGroup( L["Buff Applied"],              1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
+					auraDownToggles    = CreateTypeSpellsGroup( L["Buff Down"],                 2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
+					castStartToggles   = CreateTypeSpellsGroup( L["Cast Spell / Cast Success"], 3, function() return not gsadb.isCastStartEnable end,   {"cast"}            ),
+					castSuccessToggles = CreateTypeSpellsGroup( L["Simple Spells"],             4, function() return not gsadb.isCastSuccessEnable end, {"ability"}         )
+				}
 			}
 		}
 	}
