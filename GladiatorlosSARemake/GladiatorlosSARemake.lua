@@ -330,8 +330,6 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             elseif gsadb.IsSoundSuccessCastEnable then
                 if self:Throttle(tostring(spellID).."default", 0.05) then return end
                 self:PlaySpell("success")
-            else
-                self:PlaySpell(currentSpell["soundName"])
             end
 
         -- Check simple spells without cast
