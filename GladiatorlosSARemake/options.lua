@@ -391,7 +391,7 @@ function GSA:OnOptionCreate()
 							},
 							IsEnemyUseInterruptEnable = {
 								type = 'toggle',
-								name = L["Enable Sound Successfull Cast"],
+								name = L["Enemy Use Interrupt"],
 								order = 5
 							},
 							IsFriendUseInterruptSuccessEnable = {
