@@ -75,7 +75,8 @@ function GladiatorlosSA:GetSpellList ()
 			[740]   = { soundName = "tranquility",           type = "ability" },
 			[33831] = { soundName = "forceOfNature",         type = "ability" },
 			[5215]  = { soundName = "prowl",                 type = "ability" },
-			[93985] = { soundName = "skullBash",             type = "kick"    }
+			[93985] = { soundName = "skullBash",             type = "kick"    },
+			[97547] = { soundName = "SolarBeam",             type = "kick"    }
 		},
 
 		HUNTER = {
