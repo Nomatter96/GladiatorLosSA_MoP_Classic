@@ -263,6 +263,7 @@ function GladiatorlosSA:GetSpellList ()
 			[2457]  = { soundName = "battleStance",          type = "ability" },
 			[71]    = { soundName = "defensiveStance",       type = "ability" },
 			[2458]  = { soundName = "berserkerStance",       type = "ability" },
+			[97462] = { soundName = "RallyingCry",           type = "ability" },
 			[6552]  = { soundName = "pummel",                type = "kick"    }
 		}
 	}
