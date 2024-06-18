@@ -171,6 +171,12 @@ function GladiatorlosSA:GetSpellList ()
 			[6346]  = { soundName = "fearWard",              type = "buff"    },
 			[47788] = { soundName = "GuardianSpirit",        type = "buff"    },
 			[47585] = { soundName = "dispersion",            type = "buff"    },
+			[586]   = { soundName = "fade",                  type = "buff"    },
+			[96267] = { soundName = "innerFocus",            type = "buff"    }, -- rank 2
+			[96266] = { soundName = "innerFocus",            type = "buff"    }, -- rank 1
+			[96219] = { soundName = "handOfFreedom",         type = "buff"    },
+			[87153] = { soundName = "darkArchangel",         type = "buff"    },
+			[87152] = { soundName = "archangel",             type = "buff"    },
 			[15487] = { soundName = "silence",               type = "debuff"  },
 			[64044] = { soundName = "psychicHorror",         type = "debuff"  },
 			[605]   = { soundName = "mindControl",           type = "cast"    },
@@ -254,6 +260,7 @@ function GladiatorlosSA:GetSpellList ()
 			[12975] = { soundName = "lastStand",             type = "buff"    },
 			[20230] = { soundName = "Retaliation",           type = "buff"    },
 			[12328] = { soundName = "sweepingStrikes",       type = "buff"    },
+			[85730] = { soundName = "deadlyCalm",            type = "buff"    },
 			[676]   = { soundName = "disarm",                type = "debuff"  },
 			[12809] = { soundName = "concussionBlow",        type = "debuff"  },
 			[46968] = { soundName = "shockwave",             type = "debuff"  },
