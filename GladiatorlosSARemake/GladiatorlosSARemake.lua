@@ -194,29 +194,25 @@ function GladiatorlosSA:OnInitialize()
     self:RegisterChatCommand("gsa", "ShowConfig")
     LSM.RegisterCallback(LSM_GSA_SOUNDFILES, "LibSharedMedia_Registered", LSMRegistered)
     DEFAULT_CHAT_FRAME:AddMessage(GSA_TEXT .. L["GSA_VERSION"] .. GSA_AUTHOR .." "..GSA_TEST_BRANCH);
- end
+end
 
- function GladiatorlosSA:OnEnable()
+function GladiatorlosSA:OnEnable()
     GladiatorlosSA:RegisterEvent("PLAYER_ENTERING_WORLD")
     GladiatorlosSA:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     GladiatorlosSA:RegisterEvent("UNIT_AURA")
     if not GSA_LANGUAGE[gsadb.path] then gsadb.path = GSA_LOCALEPATH[GetLocale()] end
     self.throttled = {}
     self.smarter = 0
- end
+end
 
- function GladiatorlosSA:OnDisable()
-    -- why is this here
- end
+function GladiatorlosSA:PLAYER_ENTERING_WORLD()
+    self:CheckCanPlaySound()
+end
 
 -- play sound by file name
 function GSA:PlaySound(fileName)
-    PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName .. ".ogg", gsadb.output_menu)
+    PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName .. ".mp3", gsadb.output_menu)
 end
-
- function GladiatorlosSA:PLAYER_ENTERING_WORLD()
-     self:CheckCanPlaySound()
- end
 
 function GladiatorlosSA:PlaySpell(spellName)
     if gsadb.throttle ~= 0 and self:Throttle("playspell",gsadb.throttle) then
@@ -315,13 +311,14 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
-            GladiatorlosSA_wait(0.5, function() self:PlaySpell("interrupted") end)
+            GladiatorlosSA_wait(currentSpell["durationSound"], function() self:PlaySpell("interrupted") end)
         
         -- Check buff and debuff
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
-            self:PlaySpell(currentSpell["soundName"] .. "Down")
+            self:PlaySpell(currentSpell["soundName"])
+            GladiatorlosSA_wait(currentSpell["durationSound"] - 0.1, function() self:PlaySpell("Down") end)
         
         -- Check cast spells
         elseif (event == "SPELL_CAST_START" or event == "SPELL_CAST_SUCCESS") and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then
