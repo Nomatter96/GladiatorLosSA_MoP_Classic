@@ -13,8 +13,8 @@
 
 	Types:
 	1. buff - add in "Buff Applied" and "Buff Down" in "Abilities".
-		When buff down, then addon add itself current suffix "Down" to sondName (like "starfall" + "Down" = "starfallDown")
-		Dont need copy past ability and rename soundName
+		When buff down, then addon sound itself suffix "Down" after sond spell
+		Dont need copy past ability and rename soundName and add second soundfile like spellNameDown (it's useless)
 	2. debuff - add in "Buff Applied" in "Abilities"
 	3. ability - add in "Spell Cast" in "Abilities"
 	4. cast - add in "Spell Cast" and "Cast Success" in "Abilities"
