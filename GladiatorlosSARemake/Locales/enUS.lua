@@ -1,7 +1,7 @@
 ﻿local L = LibStub("AceLocale-3.0"):NewLocale("GladiatorlosSA", "enUS",true)
 if not L then return end
 
-L["GSA_VERSION"] = "|cffFF7D0A CATA-2.1 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
+L["GSA_VERSION"] = "|cffFF7D0A CATA-2.1.1 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
 
 L["Spell_CastSuccess"] = "On Successful Cast"
 L["Spell_CastStart"] = "On Beginning of Spell Cast"
@@ -9,6 +9,7 @@ L["Spell_AuraApplied"] = "On Buff/Debuff Application"
 L["Spell_AuraRemoved"] = "On Buff/Debuff Removal"
 L["Spell_Interrupt"] = "On Cast Interrupt"
 L["Spell_Summon"] = "On Spell Summon"
+L["SPELL_MISSED"] = "On Spell Missed"
 L["Any"] = true
 L["Player"] = true
 L["Target"] = true
@@ -49,7 +50,7 @@ L["PVP Voice Alert"] = true
 L["Load Configuration"] = "<-- Load GSA Menus"
 L["Load Configuration Options"] = true
 L["General"] = true
-L["General options"] = "General Options"
+L["Spell Extra Functions"] = "Extra Functions"
 L["Enable area"] = "Enabled Locations"
 L["Anywhere"] = true
 L["Alert works anywhere"] = "Alerts occur anywhere and everywhere."
@@ -83,7 +84,7 @@ L["Chech this will disable alert for spell being casted to friendly targets"] = 
 L["Disable special abilities"] = "Cast Success/Instants"
 L["Check this will disable alert for instant-cast important abilities"] = "Disable all alerts in Cast Success/Instants"
 L["Disable friendly interrupt"] = "Friendly Interrupts"
-L["Enable Sound Successfull Cast"] = "Enable sound successfull cast"
+L["Alert Cast success"] = "Alert cast success"
 L["Enemy Use Interrupt"] = "Enemy Use Interrupt"
 L["Check this will disable alert for successfully-landed friendly interrupting abilities"] = "Disable the alert for successful interrupts done by you or your allies which lock the enemy out of casting.|n|n('Countered!')"
 L["Buff Applied"] = true
@@ -166,6 +167,12 @@ L["PurgeDesc"] = "Generic alert for purges that remove magic effects from your t
 
 L["Friend use interrupt successful"] = "Friend use interrupt successful"
 L["FriendlyInterruptedDesc"] = "Disable the alert that occurs when an enemy successfully interrupts you or an ally which locks them out of casting.|n|n(Plays the Blizzard 'Quest Failed' sound effect.)"
+
+L["Enemy Reflected"] = "Enemy reflected"
+L["Enemy Reflected Desc"] = "When enemy reflected your spell"
+
+L["Friend Reflected"] = "Friend reflected"
+L["Friend Reflected Desc"] = "When Friend reflected enemy's spell"
 
 L["epicbattleground"] = "Epic Battlegrounds"
 L["epicbattlegroundDesc"] = "Alerts occur in Epic Battlegrounds.|n|nYou're welcome."

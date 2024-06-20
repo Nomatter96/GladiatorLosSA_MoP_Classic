@@ -5,7 +5,7 @@
 	CLASS = {
 		[ID] = {
 			soundName = "sound name from Voice_enUS folder .mp3",
-			durationSound = number (if you don't know about duration sound, you can use https://editor.audio/ or print 1.0),
+			durationSound = seconds (if you don't know about duration sound, you can use https://editor.audio/ or print 1.0 if you don't care),
 			type = "chose one type buff / debuff / cast / success / kick"
 		},
 		...
@@ -154,19 +154,19 @@ function GladiatorlosSA:GetSpellList ()
 		},
 
 		PALADIN = {
-			[1044]  = { soundName = "handOfFreedom",         durationSound = 0.74, type = "buff"   },
-			[498]   = { soundName = "divineProtection",      durationSound = 1.15, type = "buff"   },
-			[31821] = { soundName = "auraMastery",           durationSound = 0.84, type = "buff"   },
-			[1022]  = { soundName = "handOfProtection",      durationSound = 1.16, type = "buff"   },
-			[642]   = { soundName = "divineShield",          durationSound = 0.88, type = "buff"   },
-			[31884] = { soundName = "avengingWrath",         durationSound = 0.92, type = "buff"   },
-			[6940]  = { soundName = "handofsacrifice",       durationSound = 1.06, type = "buff"   },
-			[31842] = { soundName = "divineFavor",           durationSound = 0.94, type = "buff"   },
-			[54428] = { soundName = "divinePlea",            durationSound = 0.83, type = "buff"   },
-			[853]   = { soundName = "hammerOfJustice",       durationSound = 1.04, type = "debuff" },
-			[20066] = { soundName = "repentance",            durationSound = 0.75, type = "debuff" },
-			[10326] = { soundName = "turnEvil",              durationSound = 0.59, type = "cast"   },
-			[96231] = { soundName = "Rebuke",                durationSound = 0.60, type = "kick"   }
+			[1044]  = { soundName = "handOfFreedom",         durationSound = 0.74, type = "buff"    },
+			[498]   = { soundName = "divineProtection",      durationSound = 1.15, type = "buff"    },
+			[31821] = { soundName = "auraMastery",           durationSound = 0.84, type = "buff"    },
+			[1022]  = { soundName = "handOfProtection",      durationSound = 1.16, type = "buff"    },
+			[642]   = { soundName = "divineShield",          durationSound = 0.88, type = "buff"    },
+			[31884] = { soundName = "avengingWrath",         durationSound = 0.92, type = "buff"    },
+			[6940]  = { soundName = "handofsacrifice",       durationSound = 1.06, type = "buff"    },
+			[31842] = { soundName = "divineFavor",           durationSound = 0.94, type = "buff"    },
+			[54428] = { soundName = "divinePlea",            durationSound = 0.83, type = "buff"    },
+			[853]   = { soundName = "hammerOfJustice",       durationSound = 1.04, type = "debuff"  },
+			[20066] = { soundName = "repentance",            durationSound = 0.75, type = "debuff"  },
+			[10326] = { soundName = "turnEvil",              durationSound = 0.59, type = "cast"    },
+			[96231] = { soundName = "Rebuke",                durationSound = 0.60, type = "kick"    }
 		},
 
 		PRIEST = {
@@ -216,7 +216,7 @@ function GladiatorlosSA:GetSpellList ()
 			[36554] = { soundName = "shadowstep",            durationSound = 0.83, type = "ability" },
 			[1856]  = { soundName = "vanish",                durationSound = 0.69, type = "ability" },
 			[76577] = { soundName = "SmokeBomb",             durationSound = 0.85, type = "ability" },
-			[1766]  = { soundName = "kick",                  durationSound = 0.47, type = "kick"   }
+			[1766]  = { soundName = "kick",                  durationSound = 0.47, type = "kick"    }
 		},
 
 		SHAMAN = {
@@ -274,23 +274,10 @@ function GladiatorlosSA:GetSpellList ()
 			[2457]  = { soundName = "battleStance",          durationSound = 1.05, type = "ability" },
 			[71]    = { soundName = "defensiveStance",       durationSound = 1.31, type = "ability" },
 			[2458]  = { soundName = "berserkerStance",       durationSound = 1.23, type = "ability" },
-			[97462] = { soundName = "RallyingCry",           durationSound = 0.9, type = "ability" },
+			[97462] = { soundName = "RallyingCry",           durationSound = 0.9,  type = "ability" },
 			[6552]  = { soundName = "pummel",                durationSound = 0.35, type = "kick"    }
 		}
 	}
-end
-
-function GladiatorlosSA:IsPvPTrinket(spellID)
-	local pvpTrinket = 42292
-	local willToSurvive = 59752
-	return (spellID == pvpTrinket) or (spellID == willToSurvive)
-end
-
-function GladiatorlosSA:IsEpicBG(instanceMapID)
-	return instanceMapID == 2118 or -- Wintergrasp
-		instanceMapID == 30 or      -- Alterac Valley
-		instanceMapID == 628 or     -- Isle of Conquest
-		instanceMapID == 2755       -- Tol Barad
 end
 
 function GladiatorlosSA:FindSpellByID(spellID)
@@ -300,6 +287,26 @@ function GladiatorlosSA:FindSpellByID(spellID)
 		end
 	end
 	return nil
+end
+
+local pvpTrinkets = {
+	[42292] = true, -- PvP Trinket
+	[59752] = true  -- Will To Survive
+}
+
+function GladiatorlosSA:IsPvPTrinket(spellID)
+	return pvpTrinkets[spellID] ~= nil
+end
+
+local epicBG = {
+	[2118] = true, -- Wintergrasp
+	[30]   = true, -- Alterac Valley
+	[628]  = true, -- Isle of Conquest
+	[2755] = true  -- Tol Barad
+}
+
+function GladiatorlosSA:IsEpicBG(instanceMapID)
+	return epicBG[instanceMapID] ~= nil
 end
 
 -- It's not using for now, but may be some day
