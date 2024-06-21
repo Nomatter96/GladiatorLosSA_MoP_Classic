@@ -15,11 +15,11 @@ function GSA:CreateSpellsOption()
         order = -2,
         args = {
             spellTypeDisable   = GSA:CreateSpellTypeDisableGroup(),
-            spellSettings      = GSA:CreateExtraFunctionsGroup(),
             auraAppliedToggles = GSA:CreateTypeSpellsTab( L["Buff Applied"],              1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
             auraDownToggles    = GSA:CreateTypeSpellsTab( L["Buff Down"],                 2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
             castStartToggles   = GSA:CreateTypeSpellsTab( L["Cast Spell / Cast Success"], 3, function() return not gsadb.isCastStartEnable end,   {"cast"}            ),
-            castSuccessToggles = GSA:CreateTypeSpellsTab( L["Simple Spells"],             4, function() return not gsadb.isCastSuccessEnable end, {"ability"}         )
+            castSuccessToggles = GSA:CreateTypeSpellsTab( L["Simple Spells"],             4, function() return not gsadb.isCastSuccessEnable end, {"ability"}         ),
+            extraFunctions     = GSA:CreateExtraFunctionsGroup()
         }
     }
 end
@@ -64,8 +64,16 @@ function GSA:CreateExtraFunctionsGroup()
     return {
         type = 'group',
         name = L["Spell Extra Functions"],
-        inline = true,
-        order = -1,
+        order = 5,
+        set = function(info, value)
+			local name = info[#info]
+			gsadb[name] = value
+			GSA:CheckCanPlaySound()
+		end,
+		get = function(info)
+			local name = info[#info]
+			return gsadb[name]
+		end,
         args = {
             onlyTargetFocus = {
                 type = 'toggle',

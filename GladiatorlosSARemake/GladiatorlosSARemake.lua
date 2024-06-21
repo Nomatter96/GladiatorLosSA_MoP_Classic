@@ -52,6 +52,8 @@ local GSA_TYPE = {
     [COMBATLOG_FILTER_UNKNOWN_UNITS]   = "Unknown unit",
 }
 self.GSA_TYPE = GSA_TYPE
+local enemyFilter = bit.bor(COMBATLOG_FILTER_HOSTILE_PLAYERS, COMBATLOG_FILTER_HOSTILE_UNITS)
+local friendFilter = bit.bor(COMBATLOG_FILTER_FRIENDLY_UNITS, COMBATLOG_FILTER_ME, COMBATLOG_FILTER_MY_PET)
 
 local dbDefaults = {
     profile = {
@@ -253,16 +255,24 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         end
     end
 
-    if event == "SPELL_MISSED" and typeParam == "REFLECT" then
-        self:PlaySpell("reflected")
-        return
-    end
-
-    -- First check is PvPTrinket
-    if CombatLog_Object_IsA(sourceFlags,COMBATLOG_FILTER_HOSTILE_PLAYERS) and event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
-        _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
-        self:PlaySpell(engClass)
-        return
+    -- Before spells check
+    if CombatLog_Object_IsA(sourceFlags, enemyFilter) then
+        --  check is PvPTrinket
+        if event == "SPELL_AURA_APPLIED" and gsadb.pvpTrinket and self:IsPvPTrinket(spellID) then
+            _, engClass, _, _, _, _, _ = GetPlayerInfoByGUID(sourceGUID)
+            self:PlaySpell(engClass)
+            return
+        --  check is Reflected
+        elseif event == "SPELL_MISSED" and typeParam == "REFLECT" and gsadb.IsFriendReflectedEnable then
+            self:PlaySpell("reflected")
+            return
+        end
+    elseif CombatLog_Object_IsA(sourceFlags, friendFilter) then
+        --  check is Reflected
+        if event == "SPELL_MISSED" and typeParam == "REFLECT" and gsadb.IsEnemyReflectedEnable then
+            self:PlaySpell("enemyReflected")
+            return
+        end
     end
 
     -- get current spell
@@ -272,18 +282,10 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
     end
 
     -- check Source is Enemy
-    if CombatLog_Object_IsA(sourceFlags,COMBATLOG_FILTER_HOSTILE_PLAYERS) then
-        local unitType = strsplit("-", sourceGUID)
-        if unitType ~= "Player" and unitType ~= "Pet" then
-            return
-        end
-
-        if event == "SPELL_MISSED" and typeParam == "REFLECT" and gsadb.IsEnemyReflectedEnable then
-            self:PlaySpell("enemyReflected")
-
+    if CombatLog_Object_IsA(sourceFlags, enemyFilter) then
         -- check event and (is spell's group enable in options) and (is spell enable in options)
         -- Check kick
-        elseif event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
+        if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             GladiatorlosSA_wait(currentSpell["durationSound"], self:PlaySpell("interrupted"))
@@ -310,18 +312,13 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         end
     
     -- Check Dest is enemy
-    elseif CombatLog_Object_IsA(destFlags,COMBATLOG_FILTER_HOSTILE_PLAYERS) and (IsGUIDInGroup(sourceGUID) or sourceGUID == UnitGUID("player")) then
+    elseif CombatLog_Object_IsA(destFlags, enemyFilter) and IsGUIDInGroup(sourceGUID) or sourceGUID == UnitGUID("player") then
         if event == "SPELL_INTERRUPT" and gsadb.IsFriendUseInterruptSuccessEnable and currentSpell["type"] == "kick" then
             self:PlaySpell("Lockout")
         end
 
     -- Check Dest is friend or myself
-    elseif CombatLog_Object_IsA(destFlags,COMBATLOG_FILTER_FRIENDLY_UNITS) and (IsGUIDInGroup(destGUID) or destGUID == UnitGUID("player")) then
-        if event == "SPELL_MISSED" and typeParam == "REFLECT" and gsadb.IsFriendReflectedEnable then
-            self:PlaySpell("reflected")
-            return
-        end
-
+    elseif CombatLog_Object_IsA(destFlags, friendFilter) and IsGUIDInGroup(destGUID) or destGUID == UnitGUID("player") then
         if event == "SPELL_AURA_APPLIED" and currentSpell["type"] == "debuff" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         end

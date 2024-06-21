@@ -4,7 +4,7 @@
 	GetSpellList store class and spells in a certain pattern
 	CLASS = {
 		[ID] = {
-			soundName = "sound name from Voice_enUS folder .mp3",
+			soundName = "sound name from Voice_enUS folder *.mp3", (Voice sound is Neospeech Julie)
 			durationSound = seconds (if you don't know about duration sound, you can use https://editor.audio/ or print 1.0 if you don't care),
 			type = "chose one type buff / debuff / cast / success / kick"
 		},
@@ -309,7 +309,7 @@ function GladiatorlosSA:IsEpicBG(instanceMapID)
 	return epicBG[instanceMapID] ~= nil
 end
 
--- It's not using for now, but may be some day
+-- It's not using now, but maybe someday
 function GladiatorlosSA:GetClassByPet(petGUID)
 	local unitType, _, _, _, _, petID, _ = strsplit("-", petGUID)
 	if (unitType ~= "Pet") then
