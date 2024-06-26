@@ -6,7 +6,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
 local LSM = LibStub("LibSharedMedia-3.0")
 local self, GSA, PlaySoundFile = GladiatorlosSA, GladiatorlosSA, PlaySoundFile
 local GSA_TEXT = "|cff69CCF0GladiatorlosSARemake|r (|cffFFF569/gsa|r)"
-local GSA_TEST_BRANCH = ""
 local GSA_AUTHOR = " "
 local gsadb
 local soundz = {}
@@ -52,8 +51,6 @@ local GSA_TYPE = {
     [COMBATLOG_FILTER_UNKNOWN_UNITS]   = "Unknown unit",
 }
 self.GSA_TYPE = GSA_TYPE
-local enemyFilter = bit.bor(COMBATLOG_FILTER_HOSTILE_PLAYERS, COMBATLOG_FILTER_HOSTILE_UNITS)
-local friendFilter = bit.bor(COMBATLOG_FILTER_FRIENDLY_UNITS, COMBATLOG_FILTER_ME, COMBATLOG_FILTER_MY_PET)
 
 local dbDefaults = {
     profile = {
@@ -187,7 +184,7 @@ function GladiatorlosSA:OnInitialize()
     self:InitializeOptionTable()
     self:RegisterChatCommand("gsa", "ShowConfig")
     LSM.RegisterCallback(LSM_GSA_SOUNDFILES, "LibSharedMedia_Registered", LSMRegistered)
-    DEFAULT_CHAT_FRAME:AddMessage(GSA_TEXT .. L["GSA_VERSION"] .. GSA_AUTHOR .." "..GSA_TEST_BRANCH);
+    DEFAULT_CHAT_FRAME:AddMessage(GSA_TEXT .. L["GSA_VERSION"] .. GSA_AUTHOR);
 end
 
 function GladiatorlosSA:OnEnable()
@@ -235,6 +232,9 @@ function GSA:CheckCanPlaySound()
         (currentZoneType == "pvp" and gsadb.epicbattleground and self:IsEpicBG(instanceMapID)) or -- Epic Battleground
         (currentZoneType == "arena" and gsadb.arena)                                              -- Arena
 end
+
+local enemyFilter = bit.bor(COMBATLOG_FILTER_HOSTILE_PLAYERS, COMBATLOG_FILTER_HOSTILE_UNITS)
+local friendFilter = bit.bor(COMBATLOG_FILTER_FRIENDLY_UNITS, COMBATLOG_FILTER_ME, COMBATLOG_FILTER_MY_PET)
 
 function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
     if (GetZonePVPInfo() == "sanctuary") or (not isCanPlaySound) then
@@ -295,7 +295,7 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
-            GladiatorlosSA_wait(currentSpell["durationSound"] - 0.1, self:PlaySpell("Down"))
+            GladiatorlosSA_wait(currentSpell["durationSound"] - 0.1, self:PlaySound("Down"))
         
         -- Check cast spells
         elseif (event == "SPELL_CAST_START" or event == "SPELL_CAST_SUCCESS") and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then
@@ -303,7 +303,7 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
                 self:PlaySpell(currentSpell["soundName"])
             elseif gsadb.IsSoundSuccessCastEnable then
                 if self:Throttle(tostring(spellID).."default", 0.05) then return end
-                self:PlaySpell("success")
+                self:PlaySound("success")
             end
 
         -- Check simple spells without cast
@@ -325,18 +325,26 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
     end
 end
 
--- play drinking in arena
-function GladiatorlosSA:UNIT_AURA(event,uid)
+local function IsDrinkingAuraByName(name)
+    return string.find(name, "Drink") ~= nil or string.find(name, "Food") ~= nil or string.find(name, "Refreshment") ~= nil
+end
+
+function GladiatorlosSA:UNIT_AURA(event, unitTarget, updateInfo)
     local _,currentZoneType = IsInInstance()
 
-    --if gsadb.drinking then--if uid:find("arena") and gsadb.drinking then 
-    if UnitIsEnemy("player", uid) and gsadb.drinking then
-        if (AuraUtil.FindAuraByName("Drinking",uid) or AuraUtil.FindAuraByName("Food",uid) or AuraUtil.FindAuraByName("Refreshment",uid) or AuraUtil.FindAuraByName("Drink",uid)) and currentZoneType == "arena" then
-            if self:Throttle(tostring(104270) .. uid, 4) then return end
-        self:PlaySound("drinking")
+    if currentZoneType ~= "arena" or not UnitIsEnemy("player", unitTarget) then
+        return
+    end
+
+    if gsadb.drinking then
+        for i = 1, #updateInfo.addedAuras do
+            if IsDrinkingAuraByName(updateInfo.addedAuras[i].name) then
+                self:PlaySound("drinking")
+            end
         end
     end
-    --end
+
+
 end
 
 
