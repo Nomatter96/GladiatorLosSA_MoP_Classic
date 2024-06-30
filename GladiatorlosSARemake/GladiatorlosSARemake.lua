@@ -295,7 +295,7 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
-            GladiatorlosSA_wait(currentSpell["durationSound"] - 0.1, self:PlaySound("Down"))
+            GladiatorlosSA_wait(currentSpell["durationSound"] - 0.1, function() self:PlaySound("Down") end)
         
         -- Check cast spells
         elseif (event == "SPELL_CAST_START" or event == "SPELL_CAST_SUCCESS") and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then
