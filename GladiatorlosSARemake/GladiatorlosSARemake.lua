@@ -288,7 +288,7 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
-            GladiatorlosSA_wait(currentSpell["durationSound"], self:PlaySpell("interrupted"))
+            GladiatorlosSA_wait(currentSpell["durationSound"], function() self:PlaySpell("interrupted") end)
         
         -- Check buff and debuff
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
