@@ -227,7 +227,7 @@ function GSA:CheckCanPlaySound()
     local _,_,_,_,_,_,_,instanceMapID = GetInstanceInfo()
 
     isCanPlaySound = gsadb.all or                                                                 -- Anywhere
-        gsadb.field or                                                                            -- World
+        (currentZoneType == "none" and gsadb.field) or                                            -- World
         (currentZoneType == "pvp" and gsadb.battleground and not self:IsEpicBG(instanceMapID)) or -- Battleground
         (currentZoneType == "pvp" and gsadb.epicbattleground and self:IsEpicBG(instanceMapID)) or -- Epic Battleground
         (currentZoneType == "arena" and gsadb.arena)                                              -- Arena
