@@ -85,36 +85,6 @@ local dbDefaults = {
     }    
 }
 
-local waitTable = {};
-local waitFrame = nil;
-function GladiatorlosSA:WaitDuration(delay, func, ...)
-  if(type(delay)~="number" or type(func)~="function") then
-    return false;
-  end
-  if(waitFrame == nil) then
-    waitFrame = CreateFrame("Frame","WaitFrame", UIParent);
-    waitFrame:SetScript("onUpdate",function (self,elapse)
-      local count = #waitTable;
-      local i = 1;
-      while(i<=count) do
-        local waitRecord = tremove(waitTable,i);
-        local d = tremove(waitRecord,1);
-        local f = tremove(waitRecord,1);
-        local p = tremove(waitRecord,1);
-        if(d>elapse) then
-          tinsert(waitTable,i,{d-elapse,f,p});
-          i = i + 1;
-        else
-          count = count - 1;
-          f(unpack(p));
-        end
-      end
-    end);
-  end
-  tinsert(waitTable,{delay,func,{...}});
-  return true;
-end
-
  -- LSM BEGIN / inspired from MSBTMedia.lua
 local function RegisterSound(soundName, soundPath)
     if (type(soundName) ~= "string" or type(soundPath) ~= "string") then return end
@@ -285,14 +255,14 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
-            self:WaitDuration(currentSpell["durationSound"], function() self:PlaySpell(self:GetEnemyInterruptedSuccessSound()) end)
+            C_Timer.After(currentSpell["durationSound"], function() self:PlaySpell(self:GetEnemyInterruptedSuccessSound()) end)
         
         -- Check buff and debuff
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
-            self:WaitDuration(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
+            C_Timer.After(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
         
         -- Check cast spells
         elseif (event == "SPELL_CAST_START" or event == "SPELL_CAST_SUCCESS") and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then

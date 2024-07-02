@@ -246,7 +246,7 @@ function GSA:CreateTypeSpellsTab(aName, aOrder, disabledFunction, filterType)
 			if value then
 				GSA:PlaySound(currentSpell["soundName"])
 				if spellType == "auraDownToggles" then
-					GSA:WaitDuration(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
+					C_Timer.After(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
 				end
 			end
 		end,
