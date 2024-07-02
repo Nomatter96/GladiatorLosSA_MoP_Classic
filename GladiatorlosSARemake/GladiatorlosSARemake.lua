@@ -87,7 +87,7 @@ local dbDefaults = {
 
 local waitTable = {};
 local waitFrame = nil;
-function GladiatorlosSA_wait(delay, func, ...)
+function GladiatorlosSA:WaitDuration(delay, func, ...)
   if(type(delay)~="number" or type(func)~="function") then
     return false;
   end
@@ -285,14 +285,14 @@ function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
         if event == "SPELL_CAST_SUCCESS" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_INTERRUPT" and gsadb.IsEnemyUseInterruptEnable and currentSpell["type"] == "kick" then
-            GladiatorlosSA_wait(currentSpell["durationSound"], function() self:PlaySpell(self:GetEnemyInterruptedSuccessSound()) end)
+            self:WaitDuration(currentSpell["durationSound"], function() self:PlaySpell(self:GetEnemyInterruptedSuccessSound()) end)
         
         -- Check buff and debuff
         elseif event == "SPELL_AURA_APPLIED" and gsadb.isAuraAppliedEnable and gsadb["auraAppliedToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
         elseif event == "SPELL_AURA_REMOVED" and gsadb.isAuraDownEnable and gsadb["auraDownToggles"][spellID] then
             self:PlaySpell(currentSpell["soundName"])
-            GladiatorlosSA_wait(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
+            self:WaitDuration(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
         
         -- Check cast spells
         elseif (event == "SPELL_CAST_START" or event == "SPELL_CAST_SUCCESS") and gsadb.isCastStartEnable and gsadb["castStartToggles"][spellID] then

@@ -65,15 +65,8 @@ function GSA:CreateExtraFunctionsGroup()
         type = 'group',
         name = L["Spell Extra Functions"],
         order = 5,
-        set = function(info, value)
-			local name = info[#info]
-			gsadb[name] = value
-			GSA:CheckCanPlaySound()
-		end,
-		get = function(info)
-			local name = info[#info]
-			return gsadb[name]
-		end,
+        set = function(info, value) gsadb[info[#info]] = value end,
+		get = function(info) return gsadb[info[#info]] end,
         args = {
             onlyTargetFocus = {
                 type = 'toggle',
@@ -85,40 +78,71 @@ function GSA:CreateExtraFunctionsGroup()
                 type = 'toggle',
                 name = L["Alert Drinking"],
                 desc = L["In arena, alert when enemy is drinking"],
-                order = 2
+                order = 2,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then self:PlaySound(self:GetDrinkingSound()) end
+				end
             },
             IsSoundSuccessCastEnable = {
                 type = 'toggle',
                 name = L["Alert Cast success"],
-                order = 3
+                order = 3,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then self:PlaySound(self:GetCastSuccessSound()) end
+				end
             },
             pvpTrinket = {
                 type = 'toggle',
                 name = L["PvP Trinketed Class"],
                 desc = L["Also announce class name with trinket alert when hostile targets use PvP trinket in arena"],
-                order = 4
+                order = 4,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then
+						local _, engClass = GetPlayerInfoByGUID(UnitGUID("player"))
+						self:PlaySound(self:GetClassTrinketSound(engClass))
+					end
+				end
             },
             IsEnemyUseInterruptEnable = {
                 type = 'toggle',
                 name = L["Enemy Use Interrupt"],
-                order = 5
+                order = 5,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then self:PlaySound(self:GetEnemyInterruptedSuccessSound()) end
+				end
             },
             IsFriendUseInterruptSuccessEnable = {
                 type = 'toggle',
                 name = L["Friend use interrupt successful"],
-                order = 6
+                order = 6,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then self:PlaySound(self:GetFriendInterruptedSuccessSound()) end
+				end
             },
             IsEnemyReflectedEnable = {
                 type = 'toggle',
                 name = L["Enemy Reflected"],
                 desc = L["Enemy Reflected Desc"],
-                order = 7
+                order = 7,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then self:PlaySound(self:GetEnemyReflectedSound()) end
+				end
             },
             IsFriendReflectedEnable = {
                 type = 'toggle',
                 name = L["Friend Reflected"],
                 desc = L["Friend Reflected Desc"],
-                order = 8
+                order = 8,
+				set = function(info, value)
+					gsadb[info[#info]] = value
+					if value then self:PlaySound(self:GetFriendReflectedSound()) end
+				end
             }
         }
     }
@@ -216,11 +240,14 @@ function GSA:CreateTypeSpellsTab(aName, aOrder, disabledFunction, filterType)
 		order = aOrder,
 		set = function(info, value)
 			local spellType = info[2]
-			local kind = info[3]
 			local spellID = tonumber(info[#info])
+			local currentSpell = GSA:FindSpellByID(spellID)
 			gsadb[spellType][spellID] = value
 			if value then
-				GSA:PlaySound(GSA.spellList[kind][spellID]["soundName"])
+				GSA:PlaySound(currentSpell["soundName"])
+				if spellType == "auraDownToggles" then
+					GSA:WaitDuration(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
+				end
 			end
 		end,
 		get = function(info, value)
