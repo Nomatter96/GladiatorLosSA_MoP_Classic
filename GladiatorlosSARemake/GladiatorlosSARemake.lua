@@ -170,7 +170,13 @@ end
 
 -- play sound by file name
 function GSA:PlaySound(fileName)
-    PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName, gsadb.output_menu)
+    local willPlay = PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName .. ".ogg", gsadb.output_menu)
+    if not willPlay then
+        willPlay = PlaySoundFile("Interface\\Addons\\" ..gsadb.path.. "\\"..fileName .. ".mp3", gsadb.output_menu)
+        if not willPlay then
+            print("Sound files " .. fileName .. " .mp3 or .ogg are not exist")
+        end
+    end
 end
 
 function GladiatorlosSA:PlaySpell(spellName)

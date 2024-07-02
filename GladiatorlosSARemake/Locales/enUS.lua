@@ -1,7 +1,7 @@
 ﻿local L = LibStub("AceLocale-3.0"):NewLocale("GladiatorlosSA", "enUS",true)
 if not L then return end
 
-L["GSA_VERSION"] = "|cffFF7D0A CATA-2.2 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
+L["GSA_VERSION"] = "|cffFF7D0A CATA-2.2.1 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
 
 L["Spell_CastSuccess"] = "On Successful Cast"
 L["Spell_CastStart"] = "On Beginning of Spell Cast"
