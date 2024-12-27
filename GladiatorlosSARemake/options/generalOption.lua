@@ -1,20 +1,20 @@
 local GSA = GladiatorlosSA
-local gsadb
+local GSA_Settings
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
-local LSM = LibStub("LibSharedMedia-3.0")
 
 function GSA:CreateGeneralOption()
-    gsadb = self.db1.profile
+    GSA_Settings = self.db1.profile
     return {
         type = 'group',
         name = L["General"],
         order = 1,
         args = {
-            enableArea = GSA:CreateEnableAreaGroup(),
-            voice      = GSA:CreateVoiceGroup(),
-            advance    = GSA:CreateAdvanceGroup()
+            enableArea    = GSA:CreateEnableAreaGroup(),
+            displaySpells = GSA:CreateDisplaySpellsGroup(),
+            voice         = GSA:CreateVoiceGroup(),
+            advance       = GSA:CreateAdvanceGroup()
         }
     }
 end
@@ -26,7 +26,7 @@ function GSA:CreateEnableAreaGroup()
         name = L["Enable area"],
         order = 1,
         args = {
-            all = {
+            anywhereSAEnabled = {
                 type = 'toggle',
                 name = L["Anywhere"],
                 desc = L["Alert works anywhere"],
@@ -37,25 +37,25 @@ function GSA:CreateEnableAreaGroup()
                 order = 2,
                 name= ''
             },
-            arena = {
+            arenaSAEnabled = {
                 type = 'toggle',
                 name = L["Arena"],
                 desc = L["Alert only works in arena"],
-                disabled = function() return gsadb.all end,
+                disabled = function() return GSA_Settings.anywhereSAEnabled end,
                 order = 3
             },
-            battleground = {
+            battlegroundSAEnabled = {
                 type = 'toggle',
                 name = L["Battleground"],
                 desc = L["Alert only works in BG"],
-                disabled = function() return gsadb.all end,
+                disabled = function() return GSA_Settings.anywhereSAEnabled end,
                 order = 4
             },
-            epicbattleground = {
+            epicBattlegroundSAEnabled = {
                 type = 'toggle',
                 name = L["epicbattleground"],
                 desc = L["epicbattlegroundDesc"],
-                disabled = function() return gsadb.all end,
+                disabled = function() return GSA_Settings.anywhereSAEnabled end,
                 order = 5
             },
             NewLine2 = {
@@ -63,12 +63,61 @@ function GSA:CreateEnableAreaGroup()
                 order = 6,
                 name= ''
             },
-            field = {
+            worldSAEnabled = {
                 type = 'toggle',
                 name = L["World"],
                 desc = L["Alert works anywhere else then anena, BG, dungeon instance"],
-                disabled = function() return gsadb.all end,
+                disabled = function() return GSA_Settings.anywhereSAEnabled end,
                 order = 7
+            }
+        }
+    }
+end
+
+function GSA:CreateDisplaySpellsGroup()
+    return {
+        type = 'group',
+        inline = true,
+        name = "Display Spells (Only work on arena. First implementation)",
+        order = 2,
+        args = {
+            displayEnemyBuffs = {
+                type = 'toggle',
+                name = "Enemy Buffs",
+                disabled = function() return GSA_Settings.anywhereSAEnabled end,
+                order = 1
+            },
+            displayPartyDebuffs = {
+                type = 'toggle',
+                name = "Party Debuffs",
+                disabled = function() return GSA_Settings.anywhereSAEnabled end,
+                order = 2
+            },
+            executeTest = {
+                name = "Execute Test",
+                desc = "",
+                type = 'execute',
+                func = function()
+                    GSA:ParseAuras("arena1", GSA.DebugDisplaySpells)
+                    GSA:ParseAuras("party1", GSA.DebugDisplaySpells)
+                end,
+                handler = GSA,
+                order = 3
+            },
+            NewLine1 = {
+                type= 'description',
+                name= '',
+                order = 4
+            },
+            aurasBarMovable = {
+                name = "Move bars",
+                desc = "",
+                type = 'toggle',
+                set  = function(info, val)
+                    GSA_Settings.aurasBarMovable = val
+                    GSA:SetAurasBarMoveable(val)
+                end,
+                order = 5
             }
         }
     }
@@ -79,16 +128,16 @@ function GSA:CreateVoiceGroup()
         type = 'group',
         inline = true,
         name = L["Voice config"],
-        order = 2,
+        order = 3,
         args = {
-            path = {
+            voiceLocalePath = {
                 type = 'select',
                 name = L["Default / Female voice"],
                 desc = L["Select the default voice pack of the alert"],
                 values = self.GSA_LANGUAGE,
                 order = 1
             },
-            volumn = {
+            volume = {
                 type = 'range',
                 max = 1,
                 min = 0,
@@ -110,7 +159,7 @@ function GSA:CreateAdvanceGroup()
         type = 'group',
         inline = true,
         name = L["Advance options"],
-        order = 3,
+        order = 4,
         args = {
             smartDisable = {
                 type = 'toggle',
@@ -125,7 +174,7 @@ function GSA:CreateAdvanceGroup()
                 step = 0.1,
                 name = L["Throttle"],
                 desc = L["The minimum interval of each alert"],
-                disabled = function() return not gsadb.smartDisable end,
+                disabled = function() return not GSA_Settings.smartDisable end,
                 order = 2
             },
             NewLineOutput = {
@@ -147,7 +196,7 @@ function GSA:CreateAdvanceGroup()
                 desc = L["Select the default output"],
                 values = GSA_OUTPUT,
                 order = 10,
-                disabled = function() return not gsadb.outputUnlock end
+                disabled = function() return not GSA_Settings.outputUnlock end
             }
         }
     }

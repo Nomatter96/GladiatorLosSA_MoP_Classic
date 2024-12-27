@@ -1,7 +1,7 @@
 ﻿local L = LibStub("AceLocale-3.0"):NewLocale("GladiatorlosSA", "enUS",true)
 if not L then return end
 
-L["GSA_VERSION"] = "|cffFF7D0A CATA-2.2.1 |r(|cff4DFF4D4.4.0 Cataclysm (Classic)|r)"
+L["GSA_VERSION"] = "|cffFF7D0A CATA-3.0 |r(|cff4DFF4D4.4.1 Cataclysm (Classic)|r)"
 
 L["Spell_CastSuccess"] = "On Successful Cast"
 L["Spell_CastStart"] = "On Beginning of Spell Cast"
@@ -45,7 +45,7 @@ L["Custom unit name"] = "Custom Unit Name"
 L["Dest unit"] = "Destination Unit"
 L["Dest type"] = "Destination Type"
 
-L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing many important spells cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569Cataclysm support by|r |cFF00FF96Nomatter|r|n|cffFFF569Tester:|r |cFF00FF96妖梦跑哪去了(Aelfric)|r|n"
+L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing and displaying many important spells cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569Cataclysm support by|r |cFF00FF96Nomatter|r|n|cffFFF569Tester:|r |cFF00FF96妖梦跑哪去了(Aelfric)|r|n"
 L["PVP Voice Alert"] = true
 L["Load Configuration"] = "<-- Load GSA Menus"
 L["Load Configuration Options"] = true
@@ -75,9 +75,9 @@ L["Abilities"] = true
 L["Abilities options"] = true
 L["Disable options"] = "Disable Category / Feature"
 L["Disable abilities by type"] = true
-L["Disable Buff Applied"] = "Buff Applied"
+L["Disable Aura Applied"] = "Aura Applied"
 L["Check this will disable alert for buff applied to hostile targets"] = "Disable all alerts in Buff Applied"
-L["Disable Buff Down"] = "Buff Down"
+L["Disable Aura Down"] = "Aura Down"
 L["Check this will disable alert for buff removed from hostile targets"] = "Disable all alerts in Buff Down"
 L["Disable Spell Casting"] = "Spell Casting"
 L["Chech this will disable alert for spell being casted to friendly targets"] = "Disable all alerts in Spell Casting"
@@ -87,7 +87,7 @@ L["Disable friendly interrupt"] = "Friendly Interrupts"
 L["Alert Cast success"] = "Alert cast success"
 L["Enemy Use Interrupt"] = "Enemy Use Interrupt"
 L["Check this will disable alert for successfully-landed friendly interrupting abilities"] = "Disable the alert for successful interrupts done by you or your allies which lock the enemy out of casting.|n|n('Countered!')"
-L["Buff Applied"] = true
+L["Aura Applied"] = true
 L["Target and Focus Only"] = true
 L["Alert works only when your current target or focus gains the buff effect or use the ability"] = "If enabled, alerts will only happen if the ability is cast by your current target or focused target.|n|nThis option is separate for each category."
 L["Alert Drinking"] = true
@@ -108,7 +108,7 @@ L["|cffABD473Hunter|r"] = true
 L["|cFF00FF96Monk|r"] = true
 L["|cffA330C9Demon Hunter|r"] = true
 L["|cff9482C9Warlock|r"] = true
-L["Buff Down"] = true
+L["Aura Down"] = true
 L["Cast Spell / Cast Success"] = true
 L["BigHeal"] = "Big Heals"
 L["BigHeal_Desc"] = "Heal (Priest)|nPower Word: Radiance (Priest)|nHoly Light (|cffF58CBAPaladin|r)|nHealing Wave (|cff0070daShaman|r)|nSurging Mist |cFF00FF96(Monk)|r"

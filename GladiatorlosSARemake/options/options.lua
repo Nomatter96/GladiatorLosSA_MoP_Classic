@@ -3,7 +3,6 @@ local gsadb
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
-local LSM = LibStub("LibSharedMedia-3.0")
 
 function GSA:OnOptionCreate()
 	gsadb = self.db1.profile
@@ -13,7 +12,7 @@ function GSA:OnOptionCreate()
 		set = function(info, value)
 			local name = info[#info]
 			gsadb[name] = value
-			GSA:CheckCanPlaySound()
+			GSA:CheckZoneSoundAlertEnabled()
 		end,
 		get = function(info)
 			local name = info[#info]
@@ -36,10 +35,6 @@ end
 
 function GSA:AddOption(name, keyName)
 	return AceConfigDialog:AddToBlizOptions("GladiatorlosSA", name, "GladiatorlosSA", keyName)
-end
-
-function GSA:ShowConfig()
-	InterfaceOptionsFrame_OpenToCategory(GladiatorlosSA)
 end
 
 function GSA:ChangeProfile()

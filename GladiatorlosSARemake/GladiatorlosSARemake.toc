@@ -1,10 +1,10 @@
-﻿## Interface: 40400
+﻿## Interface: 40401
 ## Title: GladiatorlosSA
 ## Notes: PvP Sound Alerter
 ## Notes-zhTW: PVP技能語音提示
 ## Author: Abatorlos(of Spinebreaker), Cata Update: Nomatter, tester: 妖梦跑哪去了(Aelfric)
 ## SavedVariables: GladiatorlosSADB
-## Version: CATA-2.2.1
+## Version: CATA-3.0
 
 embeds.xml
 Locales\locales.xml
@@ -15,3 +15,5 @@ options\options.lua
 options\generalOption.lua
 options\spellsOption.lua
 BlizOptionsAddonsTab.lua
+display_spells\displaySpells.lua
+StaticGlobalData.lua

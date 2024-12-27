@@ -3,7 +3,6 @@ local gsadb
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
-local LSM = LibStub("LibSharedMedia-3.0")
 
 function GSA:CreateSpellsOption()
     gsadb = self.db1.profile
@@ -15,8 +14,8 @@ function GSA:CreateSpellsOption()
         order = -2,
         args = {
             spellTypeDisable   = GSA:CreateSpellTypeDisableGroup(),
-            auraAppliedToggles = GSA:CreateTypeSpellsTab( L["Buff Applied"],              1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
-            auraDownToggles    = GSA:CreateTypeSpellsTab( L["Buff Down"],                 2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
+            auraAppliedToggles = GSA:CreateTypeSpellsTab( L["Aura Applied"],              1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
+            auraDownToggles    = GSA:CreateTypeSpellsTab( L["Aura Down"],                 2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
             castStartToggles   = GSA:CreateTypeSpellsTab( L["Cast Spell / Cast Success"], 3, function() return not gsadb.isCastStartEnable end,   {"cast"}            ),
             castSuccessToggles = GSA:CreateTypeSpellsTab( L["Simple Spells"],             4, function() return not gsadb.isCastSuccessEnable end, {"ability"}         ),
             extraFunctions     = GSA:CreateExtraFunctionsGroup()
@@ -34,13 +33,13 @@ function GSA:CreateSpellTypeDisableGroup()
         args = {
             isAuraAppliedEnable = {
                 type = 'toggle',
-                name = L["Disable Buff Applied"],
+                name = L["Disable Aura Applied"],
                 desc = L["Check this will disable alert for buff applied to hostile targets"],
                 order = 1
             },
             isAuraDownEnable = {
                 type = 'toggle',
-                name = L["Disable Buff Down"],
+                name = L["Disable Aura Down"],
                 desc = L["Check this will disable alert for buff removed from hostile targets"],
                 order = 2
             },
@@ -102,7 +101,7 @@ function GSA:CreateExtraFunctionsGroup()
 					gsadb[info[#info]] = value
 					if value then
 						local _, engClass = GetPlayerInfoByGUID(UnitGUID("player"))
-						self:PlaySound(self:GetClassTrinketSound(engClass))
+						self:PlaySound(engClass)
 					end
 				end
             },
