@@ -162,37 +162,14 @@ local groups_options = {
 	DEATHKNIGHT = { name = L["|cffC41F3BDeath Knight|r"], kind = "DEATHKNIGHT", order = 12 }
 }
 
-local function CreateSpellTooltip(spellID)
-	local _, _, _, castTime, minRange, maxRange, _ = GetSpellInfo(spellID)
-	local cost = GetSpellPowerCost(spellID)
-	local spellDesc = GetSpellDescription(spellID)
-
-	if spellDesc == "" then
-		spellDesc = "If you see this then use /reload please, because Blizzard's API doesn't work well"
-	end
-	local tooltip = ""
-	if cost["cost"] then
-		tooltip = tooltip .. cost["cost"] .. " " .. cost["name"] .. "|n"
-	end
-	if minRange ~= 0 or maxRange ~= 0 then
-		tooltip = tooltip .. minRange .. "-" .. maxRange .. " yd range |n"
-	end
-	if castTime ~= 0 then
-		tooltip = tooltip .. string.format("%.1f", castTime / 1000) .. " sec cast |n"
-	end
-	tooltip = tooltip .. "|cffFFF569" .. spellDesc .. "|r|n"
-	tooltip = tooltip .. "|n|cffFFF569SpellID: " .. spellID .. "|r"
-	return tooltip
-end
-
 local function CreateSpellToggle(number, spellID)
 	local spellname, _, icon = GetSpellInfo(spellID)	
 	if (spellname ~= nil) then
 		return {
 			type = 'toggle',
 			name = "\124T" .. icon .. ":24\124t" .. spellname,			
-			desc = CreateSpellTooltip(spellID),
-			descStyle = "tooltip",
+			desc = C_Spell.GetSpellDescription(spellID),
+			tooltipHyperlink = C_Spell.GetSpellLink(spellID),
 			order = number
 		}
 	else
