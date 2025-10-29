@@ -1,11 +1,11 @@
 local GSA = GladiatorlosSA
-local gsadb
+local GSA_Settings
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
 
 function GSA:CreateSpellsOption()
-    gsadb = self.db1.profile
+    GSA_Settings = self.db1.profile
     return {
         type = 'group',
         name = L["Abilities"],
@@ -14,10 +14,10 @@ function GSA:CreateSpellsOption()
         order = -2,
         args = {
             spellTypeDisable   = GSA:CreateSpellTypeDisableGroup(),
-            auraAppliedToggles = GSA:CreateTypeSpellsTab( L["Aura Applied"],              1, function() return not gsadb.isAuraAppliedEnable end, {"buff", "debuff"}  ),
-            auraDownToggles    = GSA:CreateTypeSpellsTab( L["Aura Down"],                 2, function() return not gsadb.isAuraDownEnable end,    {"buff"}            ),
-            castStartToggles   = GSA:CreateTypeSpellsTab( L["Cast Spell / Cast Success"], 3, function() return not gsadb.isCastStartEnable end,   {"cast"}            ),
-            castSuccessToggles = GSA:CreateTypeSpellsTab( L["Simple Spells"],             4, function() return not gsadb.isCastSuccessEnable end, {"ability"}         ),
+            auraAppliedToggles = GSA:CreateTypeSpellsTab( L["Aura Applied"],              1, function() return not GSA_Settings.isAuraAppliedEnable end, {"buff", "debuff"}  ),
+            auraDownToggles    = GSA:CreateTypeSpellsTab( L["Aura Down"],                 2, function() return not GSA_Settings.isAuraDownEnable end,    {"buff"}            ),
+            castStartToggles   = GSA:CreateTypeSpellsTab( L["Cast Spell / Cast Success"], 3, function() return not GSA_Settings.isCastStartEnable end,   {"cast"}            ),
+            castSuccessToggles = GSA:CreateTypeSpellsTab( L["Simple Spells"],             4, function() return not GSA_Settings.isCastSuccessEnable end, {"ability", "kick"} ),
             extraFunctions     = GSA:CreateExtraFunctionsGroup()
         }
     }
@@ -64,8 +64,8 @@ function GSA:CreateExtraFunctionsGroup()
         type = 'group',
         name = L["Spell Extra Functions"],
         order = 5,
-        set = function(info, value) gsadb[info[#info]] = value end,
-		get = function(info) return gsadb[info[#info]] end,
+        set = function(info, value) GSA_Settings[info[#info]] = value end,
+		get = function(info) return GSA_Settings[info[#info]] end,
         args = {
             onlyTargetFocus = {
                 type = 'toggle',
@@ -79,8 +79,8 @@ function GSA:CreateExtraFunctionsGroup()
                 desc = L["In arena, alert when enemy is drinking"],
                 order = 2,
 				set = function(info, value)
-					gsadb[info[#info]] = value
-					if value then self:PlaySound(self:GetDrinkingSound()) end
+					GSA_Settings[info[#info]] = value
+					if value then self:PlaySound(GSA_Settings.voiceLocalePath .. self:GetDrinkingSound()) end
 				end
             },
             IsSoundSuccessCastEnable = {
@@ -88,8 +88,8 @@ function GSA:CreateExtraFunctionsGroup()
                 name = L["Alert Cast success"],
                 order = 3,
 				set = function(info, value)
-					gsadb[info[#info]] = value
-					if value then self:PlaySound(self:GetCastSuccessSound()) end
+					GSA_Settings[info[#info]] = value
+					if value then self:PlaySound(GSA_Settings.voiceLocalePath .. self:GetCastSuccessSound()) end
 				end
             },
             pvpTrinket = {
@@ -98,10 +98,10 @@ function GSA:CreateExtraFunctionsGroup()
                 desc = L["Also announce class name with trinket alert when hostile targets use PvP trinket in arena"],
                 order = 4,
 				set = function(info, value)
-					gsadb[info[#info]] = value
+					GSA_Settings[info[#info]] = value
 					if value then
 						local _, engClass = GetPlayerInfoByGUID(UnitGUID("player"))
-						self:PlaySound(engClass)
+						self:PlaySound(GSA_Settings.voiceLocalePath .. engClass)
 					end
 				end
             },
@@ -110,8 +110,8 @@ function GSA:CreateExtraFunctionsGroup()
                 name = L["Enemy Use Interrupt"],
                 order = 5,
 				set = function(info, value)
-					gsadb[info[#info]] = value
-					if value then self:PlaySound(self:GetEnemyInterruptedSuccessSound()) end
+					GSA_Settings[info[#info]] = value
+					if value then self:PlaySound(GSA_Settings.voiceLocalePath .. self:GetEnemyInterruptedSuccessSound()) end
 				end
             },
             IsFriendUseInterruptSuccessEnable = {
@@ -119,8 +119,8 @@ function GSA:CreateExtraFunctionsGroup()
                 name = L["Friend use interrupt successful"],
                 order = 6,
 				set = function(info, value)
-					gsadb[info[#info]] = value
-					if value then self:PlaySound(self:GetFriendInterruptedSuccessSound()) end
+					GSA_Settings[info[#info]] = value
+					if value then self:PlaySound(GSA_Settings.voiceLocalePath .. self:GetFriendInterruptedSuccessSound()) end
 				end
             },
             IsEnemyReflectedEnable = {
@@ -129,8 +129,8 @@ function GSA:CreateExtraFunctionsGroup()
                 desc = L["Enemy Reflected Desc"],
                 order = 7,
 				set = function(info, value)
-					gsadb[info[#info]] = value
-					if value then self:PlaySound(self:GetEnemyReflectedSound()) end
+					GSA_Settings[info[#info]] = value
+					if value then self:PlaySound(GSA_Settings.voiceLocalePath .. self:GetEnemyReflectedSound()) end
 				end
             },
             IsFriendReflectedEnable = {
@@ -139,28 +139,13 @@ function GSA:CreateExtraFunctionsGroup()
                 desc = L["Friend Reflected Desc"],
                 order = 8,
 				set = function(info, value)
-					gsadb[info[#info]] = value
-					if value then self:PlaySound(self:GetFriendReflectedSound()) end
+					GSA_Settings[info[#info]] = value
+					if value then self:PlaySound(GSA_Settings.voiceLocalePath .. self:GetFriendReflectedSound()) end
 				end
             }
         }
     }
 end
-
-local groups_options = {
-	GENERAL     = { name = L["General Abilities"],        kind = "GENERAL",     order = 1  },
-	RACIAL      = { name = L["Racials"],                  kind = "RACIAL",      order = 2  },
-	DRUID       = { name = L["|cffFF7D0ADruid|r"],        kind = "DRUID",       order = 3  },
-	HUNTER      = { name = L["|cffABD473Hunter|r"],       kind = "HUNTER",      order = 4  },
-	MAGE        = { name = L["|cff69CCF0Mage|r"],         kind = "MAGE",        order = 5  },
-	PALADIN     = { name = L["|cffF58CBAPaladin|r"],      kind = "PALADIN",     order = 6  },
-	PRIEST      = { name = L["|cffFFFFFFPriest|r"],       kind = "PRIEST",      order = 7  },
-	ROGUE       = { name = L["|cffFFF569Rogue|r"],        kind = "ROGUE",       order = 8  },
-	SHAMAN      = { name = L["|cff0070daShaman|r"],       kind = "SHAMAN",      order = 9  },
-	WARLOCK     = { name = L["|cff9482C9Warlock|r"],      kind = "WARLOCK",     order = 10 },
-	WARRIOR     = { name = L["|cffC79C6EWarrior|r"],      kind = "WARRIOR",     order = 11 },
-	DEATHKNIGHT = { name = L["|cffC41F3BDeath Knight|r"], kind = "DEATHKNIGHT", order = 12 }
-}
 
 local function CreateSpellToggle(number, spellID)
 	local spellname, _, icon = GetSpellInfo(spellID)	
@@ -218,32 +203,34 @@ function GSA:CreateTypeSpellsTab(aName, aOrder, disabledFunction, filterType)
 			local spellType = info[2]
 			local spellID = tonumber(info[#info])
 			local currentSpell = GSA:FindSpellByID(spellID)
-			gsadb[spellType][spellID] = value
+			GSA_Settings[spellType][spellID] = value
 			if value then
-				GSA:PlaySound(currentSpell["soundName"])
 				if spellType == "auraDownToggles" then
-					C_Timer.After(currentSpell["durationSound"] - 0.1, function() self:PlaySound(self:GetAuraDownSound()) end)
+					GSA:PlaySpell(spellID, currentSpell["soundName"].."Down")
+				else
+					GSA:PlaySpell(spellID, currentSpell["soundName"])
 				end
 			end
 		end,
 		get = function(info, value)
 			local spellType = info[2]
 			local spellID = tonumber(info[#info])
-			return gsadb[spellType][spellID]
+			return GSA_Settings[spellType][spellID]
 		end,
 		args = {
-			GENERAL     = CreateClassSpellsGroup(filterType, groups_options["GENERAL"]),
-			RACIAL      = CreateClassSpellsGroup(filterType, groups_options["RACIAL"]),
-			DRUID       = CreateClassSpellsGroup(filterType, groups_options["DRUID"]),
-			HUNTER      = CreateClassSpellsGroup(filterType, groups_options["HUNTER"]),
-			MAGE        = CreateClassSpellsGroup(filterType, groups_options["MAGE"]),
-			PALADIN     = CreateClassSpellsGroup(filterType, groups_options["PALADIN"]),
-			PRIEST	    = CreateClassSpellsGroup(filterType, groups_options["PRIEST"]),
-			ROGUE       = CreateClassSpellsGroup(filterType, groups_options["ROGUE"]),
-			SHAMAN	    = CreateClassSpellsGroup(filterType, groups_options["SHAMAN"]),
-			WARLOCK	    = CreateClassSpellsGroup(filterType, groups_options["WARLOCK"]),
-			WARRIOR	    = CreateClassSpellsGroup(filterType, groups_options["WARRIOR"]),
-			DEATHKNIGHT	= CreateClassSpellsGroup(filterType, groups_options["DEATHKNIGHT"])
+			GENERAL     = CreateClassSpellsGroup(filterType, GSA["groups_options"]["GENERAL"]),
+			RACIAL      = CreateClassSpellsGroup(filterType, GSA["groups_options"]["RACIAL"]),
+			DRUID       = CreateClassSpellsGroup(filterType, GSA["groups_options"]["DRUID"]),
+			HUNTER      = CreateClassSpellsGroup(filterType, GSA["groups_options"]["HUNTER"]),
+			MAGE        = CreateClassSpellsGroup(filterType, GSA["groups_options"]["MAGE"]),
+			PALADIN     = CreateClassSpellsGroup(filterType, GSA["groups_options"]["PALADIN"]),
+			PRIEST	    = CreateClassSpellsGroup(filterType, GSA["groups_options"]["PRIEST"]),
+			ROGUE       = CreateClassSpellsGroup(filterType, GSA["groups_options"]["ROGUE"]),
+			SHAMAN	    = CreateClassSpellsGroup(filterType, GSA["groups_options"]["SHAMAN"]),
+			WARLOCK	    = CreateClassSpellsGroup(filterType, GSA["groups_options"]["WARLOCK"]),
+			WARRIOR	    = CreateClassSpellsGroup(filterType, GSA["groups_options"]["WARRIOR"]),
+			DEATHKNIGHT	= CreateClassSpellsGroup(filterType, GSA["groups_options"]["DEATHKNIGHT"]),
+			MONK	    = CreateClassSpellsGroup(filterType, GSA["groups_options"]["MONK"])
 		}
 	}
 end

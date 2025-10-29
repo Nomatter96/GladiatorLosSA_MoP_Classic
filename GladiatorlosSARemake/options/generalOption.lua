@@ -132,9 +132,15 @@ function GSA:CreateVoiceGroup()
         args = {
             voiceLocalePath = {
                 type = 'select',
-                name = L["Default / Female voice"],
-                desc = L["Select the default voice pack of the alert"],
+                name = L["Default / Female voice"] .. " READ DESCRIPTION",
+                desc = "ATTENTION! If you change preset then all sounds in Sound Abilities Switcher will reset",
                 values = self.GSA_LANGUAGE,
+                set = function(info, value) -- rewrite sounds path for all spells
+                    GSA_Settings[info[#info]] = value
+                    for id, soundPath in pairs(GSA_Settings["spellSoundPaths"]) do
+                        GSA_Settings["spellSoundPaths"][id] = value
+                    end
+                end,
                 order = 1
             },
             volume = {

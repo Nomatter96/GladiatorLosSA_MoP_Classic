@@ -1,0 +1,367 @@
+Общие (GENERAL)
+"shadowSight"
+"battlemaster"
+
+Расовые (RACIAL)
+"meld"
+"berserk"
+"stoneform"
+"bloodFury"
+"Naaru"
+"Torrent"
+"forsaken"
+"quakingPalm"
+
+Друид (DRUID)
+"enrage"
+"Instinct" (from "survivalInstincts")
+"inner"
+"skin"
+"tigersFury" (from "tigersFury")
+"frenzyRegen" (from "frenziedRegeneration")
+"naturesGrasp" (from "naturesGrasp")
+"NS" (from "naturesSwiftness")
+"berserk"
+"lunar" (from "lunarEclipse")
+"solar" (from "solarEclipse")
+"clear" (from "clearcasting")
+"savage" (from "savageRoar")
+"predator" (from "predatorsSwiftness")
+"starfall"
+"dash"
+"sAMS" (from "AntiMagicShell" )
+"sIcebound" (from "IceboundFortitude" )
+"sDeter" (from "Deterrence")
+"sBlock" (from "IceBlock" )
+"sforify" (from "FortifyingBrew")
+"sBubble" (from "DivineShield" )
+"sFearWard" (from "FearWard")
+"sDisperse" (from "Dispersion")
+"sCloak" (from "CloakOfShadows")
+"sEvasion" (from "Evasion")
+"sMoveCast" (from "SpiritwalkersGrace")
+"aura" (from "UnendingResolve")
+"sReflect" (from "SpellReflection")
+"playdead" (from "PlayDead")
+"IronBark" (from "IronBark")
+"Celestial" (from "CelestialAlignment")
+"incarnate" (from "Incarnation")
+"ward" (from "CenarionWard")
+"Heart" (from "HeartOfTheWild")
+"vigil" (from "NatureVigil")
+"sVene" (from "Intervene")
+"ursoc"
+"bash"
+"maim"
+"pounce"
+"hibernate"
+"cyclone"
+"sMD" (from "MassDispel" )
+"sShatter" (from "ShatteringBlow")
+"tranq" (from "Tranquility" )
+"trents" (from "ForceOfNature")
+"prowl"
+"StampRoar" (from "StampedingRoar")
+"sMirror" (from "MirrorImage")
+"sDisarm" (from "GrappleWeapon")
+"clash" (from "Clash")
+"HOJ" (from "HammerOfJustice" )
+"redirect" (from "Redirect")
+"sWolfs" (from "FeralSpirit")
+"sSoulSwap" (from "SoulSwap")
+"teleport" (from "Teleport")
+"sFear" (from "IntimidatingRoar" )
+"sBearHug" (from "BearHug")
+"Displacer" (from "DisplacerBeast")
+"disorient" (from "DisorientingRoar")
+"massRoot" (from "MassEntanglement")
+"renewal"
+"vortex" (from "UrsolVortex")
+"SkullBash" (from "SkullBash")
+"SolarBeam" (from "SolarBeam")
+
+Охотник (HUNTER)
+"rapid" (from "RapidFire")
+"deter" (from "Deterrence")
+"bestial" (from "BestialWrath")
+"sac" (from "RoarOfSacrifice")
+"freedom" (from "MastersCall")
+"feign" (from "FeignDeath")
+"fervor"
+"sDash" (from "Dash")
+"silence" (from "SilencingShot")
+"wyvern" (from "WyvernSting")
+"scatter" (from "ScatterShot")
+"petStun"
+"trap" (from "FreezingTrap")
+"crows" (from "AMurderOfCrows")
+"scarePet" (from "ScareBeast")
+"revive" (from "RevivePet")
+"powershot"
+"stampede"
+"binding" (from "BindingShot")
+"exhilarate" (from "Exhilaration")
+"DireBeast" (from "DireBeast")
+"counter" (from "CounterShot")
+
+Маг (MAGE)
+"POM" (from "PresenceOfMind" )
+"Arcane" (from "ArcanePower" )
+"IcyVeins" (from "IcyVeins")
+"hotStreak"
+"brainFreeze"
+"block" (from "IceBlock" )
+"Evoc" (from "Evocation")
+"Alter" (from "AlterTime")
+"moveCast" (from "IceFloes")
+"shield" (from "TemporalShield")
+"blaze" (from "BlazingSpeed")
+"cauterize"
+"deep"
+"combust" (from "Combustion")
+"poly" (from "Polymorph" )
+"waterPet" (from "WaterElemental")
+"frostjaw"
+"ring" (from "RingOfFrost")
+"rune" (from "RuneOfPower")
+"snap" (from "ColdSnap")
+"mirror" (from "MirrorImage")
+"breath" (from "DragonsBreath")
+"invis" (from "Invisibility")
+"greatInvis" (from "GreaterInvisibility")
+"orb" (from "FrozenOrb")
+"CS" (from "Counterspell" )
+
+Монах (MONK)
+"dampen" (from "DampenHarm")
+"dodge" (from "Dematerialize")
+"diffuse" (from "DiffuseMagic")
+"cocoon" (from "LifeCocoon")
+"nimble" (from "NimbleBrew")
+"peace" (from "RingOfPeace")
+"Lust" (from "TigerLust")
+"eyeBrew" (from "TigereyeBrew")
+"meditate" (from "ZenMeditation")
+"sInstinct" (from "SurvivalInstincts")
+"aura" (from "ZenFocus")
+"karma" (from "TouchOfKarma")
+"transfer"
+"oxWave" (from "ChargingOxWave")
+"chi" (from "ChiBrew")
+"clash"
+"Fists" (from "FistsOfFury")
+"disarm" (from "GrappleWeapon")
+"xuen" (from "InvokeXuen")
+"LegSweep" (from "LegSweep")
+"ManaTea" (from "ManaTea")
+"paralyze" (from "Paralysis")
+"revival"
+"clones" (from "StormEarthFire")
+"BearHug" (from "BearHug")
+"spear" (from "SpearHandStrike")
+
+Рыцарь Смерти (DEATHKNIGHT)
+"tap" (from "BloodTap")
+"frenzy" (from "UnholyFrenzy")
+"vampire" (from "VampiricBlood")
+"Icebound" (from "IceboundFortitude" )
+"lich" (from "Lichborne")
+"pillar" (from "PillarOfFrost")
+"AMS" (from "AntiMagicShell" )
+"bone" (from "BoneShield")
+"frost" (from "FrostPresence")
+"blood" (from "BloodPresence")
+"unholy" (from "UnholyPresence")
+"advance" (from "DeathAdvance")
+"winter" (from "RemorselessWinter")
+"sUrsoc" (from "Ursoc")
+"purgatory"
+"strangle" (from "Strangulate")
+"petStun"
+"reaper" (from "SoulReaper")
+"simulacrum" (from "DarkSimulacrum")
+"DRW" (from "DancingRuneWeapon")
+"runeTap"
+"resetRune" (from "EmpowerRuneWeapon")
+"gargoyle" (from "SummonGargoyle")
+"zone" (from "AntiMagicZone")
+"asphyxiate"
+"pact" (from "DeathPact")
+"ground" (from "DesecratedGround")
+"massGrip" (from "GorefiendGrasp")
+"freeze" (from "MindFreeze")
+
+Паладин (PALADIN)
+"freedom" (from "HandOfFreedom")
+"DP" (from "DivineProtection" )
+"aura" (from "AuraMastery")
+"BOP" (from "HandOfProtection" )
+"bubble" (from "DivineShield" )
+"wings" (from "AvengingWrath" )
+"sac" (from "HandOfSacrifice" )
+"favor" (from "DivineFavor")
+"plea" (from "DivinePlea")
+"guardian" (from "Guardian")
+"inquisition"
+"speed" (from "SpeedOfLight")
+"law" (from "LongArmOfTheLaw")
+"purity" (from "HandOfPurity")
+"avenger" (from "HolyAvenger")
+"Sentence" (from "ExecutionSentence")
+"sSkin" (from "Barkskin")
+"HOJ" (from "HammerOfJustice" )
+"HOJ" (from "FistOfJustice")
+"repent" (from "Repentance")
+"fear" (from "TurnEvil")
+"blindLight" (from "BlindingLight")
+"hammer" (from "LightsHammer")
+"rebuke"
+
+Жрец (PRIEST)
+"PS" (from "PainSuppression")
+"PI" (from "PowerInfusion" )
+"FearWard" (from "FearWard")
+"spirit" (from "GuardianSpirit")
+"disperse" (from "Dispersion")
+"fade"
+"aura" (from "InnerFocus")
+"archangel"
+"phantasm"
+"shell" (from "SpiritShell")
+"silence"
+"Psychic" (from "PsychicHorror")
+"MC" (from "MindControl" )
+"MD" (from "MassDispel" )
+"shackle" (from "ShackleUndead")
+"lightwell"
+"sCyclone" (from "Cyclone")
+"hymn" (from "DivineHymn")
+"fear"
+"fiend" (from "ShadowFiend")
+"bender" (from "Mindbender")
+"death" (from "ShadowWordDeath")
+"tendrils" (from "VoidTendrils")
+"prayer" (from "DesperatePrayer")
+"Spectral" (from "SpectralGuise")
+"barrier"
+"shift" (from "VoidShift")
+"hope" (from "HymnOfHope")
+"chastise"
+"tranq" (from "Tranquility" )
+"psyfiend"
+
+Разбойник (ROGUE)
+"Evasion" (from "Evasion")
+"cloak" (from "CloakOfShadows")
+"rush" (from "AdrenalineRush")
+"spree" (from "KillingSpree")
+"dance" (from "ShadowDance")
+"trick" (from "TrickOfTheTrade")
+"cheat" (from "CheatingDeath")
+"sprint"
+"flurry" (from "BladeFlurry")
+"readiness" (from "CombatReadiness")
+"feint"
+"blades" (from "ShadowBlades")
+"sGrowl" (from "sGrowl")
+"blind"
+"kidney"
+"gouge"
+"disarm" (from "Disarm2")
+"cheap" (from "CheapShot")
+"sap"
+"garrote"
+"poison" (from "PoisonStun")
+"vendetta"
+"stealth"
+"prep" (from "Preparation")
+"step" (from "Shadowstep")
+"vanish"
+"smoke" (from "SmokeBomb")
+"speed" (from "BurstOfSpeed")
+"mark" (from "MarkedForDeath")
+"redirect"
+"throw" (from "DeadlyThrow")
+"kick"
+
+Шаман (SHAMAN)
+"mastery" (from "ElementalMastery")
+"ShamRage" (from "ShamanisticRage")
+"NS" (from "NaturesSwiftness")
+"EarthShield" (from "EarthShield")
+"WaterShield" (from "WaterShield")
+"aura" (from "SpiritwalkersGrace")
+"Ascendance" (from "Ascendance")
+"Astral" (from "AstralShift")
+"Ancestral" (from "AncestralGuidance")
+"hex"
+"bind" (from "BindElemental")
+"blast" (from "ElementalBlast")
+"tremor" (from "TremorTotem")
+"ground" (from "GroundingTotem")
+"tide" (from "ManaTideTotem")
+"link" (from "SpiritLink")
+"wolfs" (from "FeralSpirit")
+"capacitor" (from "CapacitorTotem")
+"stormlash" (from "StormlashTotem")
+"stream" (from "HealingStreamTotem")
+"bigStream" (from "HealingTideTotem")
+"unleash" (from "UnleashElemental")
+"bulwark" (from "StoneBulwarkTotem")
+"windwalk" (from "WindwalkTotem")
+"elements" (from "CallOfTheElements")
+"sProwl" (from "sProwl")
+"shear" (from "WindShear")
+"sSolarBeam" (from "SolarBeam")
+
+Чернокнижник (WARLOCK)
+"meta" (from "Metamorphosis")
+"DarkSoul" (from "DarkSoul")
+"Horror" (from "BloodHorror")
+"aura" (from "UnendingResolve")
+"coil" (from "MortalCoil")
+"havoc"
+"petStun"
+"disarm"
+"fear"
+"chaos" (from "ChaosBolt")
+"seduce" (from "Seduction")
+"gateway" (from "DemonicGateway")
+"haunt"
+"fear" (from "HowlOfTerror")
+"teleport" (from "DemonicCircleTeleport")
+"fury" (from "Shadowfury")
+"will" (from "UnboundWill")
+"SoulSwap" (from "SoulSwap")
+"SpellLock" (from "SpellLock")
+
+Воин (WARRIOR)
+"Enrage" (from "EnragedRegeneration")
+"Bladestorm" (from "Bladestorm")
+"wall" (from "ShieldWall")
+"BersRage" (from "BerserkerRage")
+"reckless" (from "Recklessness")
+"reflect" (from "SpellReflection")
+"LastStand" (from "LastStand")
+"parry" (from "DieByTheSword")
+"sweeps" (from "SweepingStrikes")
+"avatar"
+"Bloodbath" (from "Bloodbath")
+"vene" (from "Safeguard")
+"vene"
+"Vigilance" (from "Vigilance")
+"sStampShout" (from "StampedingShout")
+"Shatter" (from "ShatteringThrow")
+"disarm"
+"Shockwave" (from "Shockwave")
+"rally" (from "RallyingCry")
+"fear"
+"battle" (from "BattleStance")
+"defend" (from "DefensiveStance")
+"berserk" (from "BerserkerStance")
+"bolt" (from "StormBolt")
+"roots" (from "StaggeringShout")
+"DragonRoar" (from "DragonRoar")
+"massReflect" (from "MassSpellReflection")
+"pummel"
+"disrupt" (from "DisruptingShout")

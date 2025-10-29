@@ -1,19 +1,30 @@
-﻿## Interface: 40401
+﻿## Interface: 50500
 ## Title: GladiatorlosSA
 ## Notes: PvP Sound Alerter
 ## Notes-zhTW: PVP技能語音提示
-## Author: Abatorlos(of Spinebreaker), Cata Update: Nomatter, tester: 妖梦跑哪去了(Aelfric)
+## Author: Abatorlos(of Spinebreaker), MoP Update: Nomatter, tester: 妖梦跑哪去了(Aelfric), Moonfirebeam
 ## SavedVariables: GladiatorlosSADB
-## Version: CATA-3.0
+## Version: MOP-1.1.3
 
 embeds.xml
 Locales\locales.xml
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 GladiatorlosSARemake.lua
 spelllist.lua
 options\options.lua
 options\generalOption.lua
 options\spellsOption.lua
+options\soundSpellSwitcherOption.lua
 BlizOptionsAddonsTab.lua
 display_spells\displaySpells.lua
 StaticGlobalData.lua

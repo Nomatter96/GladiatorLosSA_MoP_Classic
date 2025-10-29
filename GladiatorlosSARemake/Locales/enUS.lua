@@ -1,7 +1,7 @@
 ﻿local L = LibStub("AceLocale-3.0"):NewLocale("GladiatorlosSA", "enUS",true)
 if not L then return end
 
-L["GSA_VERSION"] = "|cffFF7D0A CATA-3.0 |r(|cff4DFF4D4.4.1 Cataclysm (Classic)|r)"
+L["GSA_VERSION"] = "|cffFF7D0A MOP-1.1.3 |r(|cff4DFF4D5.5 MoP (Classic)|r)"
 
 L["Spell_CastSuccess"] = "On Successful Cast"
 L["Spell_CastStart"] = "On Beginning of Spell Cast"
@@ -45,7 +45,7 @@ L["Custom unit name"] = "Custom Unit Name"
 L["Dest unit"] = "Destination Unit"
 L["Dest type"] = "Destination Type"
 
-L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing and displaying many important spells cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569Cataclysm support by|r |cFF00FF96Nomatter|r|n|cffFFF569Tester:|r |cFF00FF96妖梦跑哪去了(Aelfric)|r|n"
+L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing and displaying many important spells cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569MoP support by|r |cFF00FF96Nomatter|r|n|cffFFF569Tester:|r |cFF00FF96妖梦跑哪去了(Aelfric)|r, |cFF00FF96Moonfirebeam|r|n"
 L["PVP Voice Alert"] = true
 L["Load Configuration"] = "<-- Load GSA Menus"
 L["Load Configuration Options"] = true
@@ -65,6 +65,7 @@ L["Voice language"] = true
 L["Select language of the alert"] = true
 L["Chinese(female)"] = true
 L["English(female)"] = "English (Female)"
+L["English Short (female)"] = "English Short (Female)"
 L["adjusting the voice volume(the same as adjusting the system master sound volume)"] = "Adjusts the voice's volume.|n|nNOTE: The voice uses the client's Master channel. You may need to adjust your other sound options accordingly."
 L["Advance options"] = "Advanced Options"
 L["Smart disable"] = "Spam Throttle"
@@ -85,7 +86,7 @@ L["Disable special abilities"] = "Cast Success/Instants"
 L["Check this will disable alert for instant-cast important abilities"] = "Disable all alerts in Cast Success/Instants"
 L["Disable friendly interrupt"] = "Friendly Interrupts"
 L["Alert Cast success"] = "Alert cast success"
-L["Enemy Use Interrupt"] = "Enemy Use Interrupt"
+L["Enemy Use Interrupt"] = "Enemy Use Interrupt successful"
 L["Check this will disable alert for successfully-landed friendly interrupting abilities"] = "Disable the alert for successful interrupts done by you or your allies which lock the enemy out of casting.|n|n('Countered!')"
 L["Aura Applied"] = true
 L["Target and Focus Only"] = true
@@ -108,6 +109,7 @@ L["|cffABD473Hunter|r"] = true
 L["|cFF00FF96Monk|r"] = true
 L["|cffA330C9Demon Hunter|r"] = true
 L["|cff9482C9Warlock|r"] = true
+L["|cFF558A84Monk|r"] = true
 L["Aura Down"] = true
 L["Cast Spell / Cast Success"] = true
 L["BigHeal"] = "Big Heals"

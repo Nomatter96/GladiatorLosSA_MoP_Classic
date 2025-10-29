@@ -8,7 +8,7 @@ function GSA:OnOptionCreate()
 	gsadb = self.db1.profile
 	self.options = {
 		type = "group",
-		name = GetAddOnMetadata("GladiatorlosSA", "Title"),
+		name = C_AddOns.GetAddOnMetadata("GladiatorlosSA", "Title"),
 		set = function(info, value)
 			local name = info[#info]
 			gsadb[name] = value
@@ -19,8 +19,9 @@ function GSA:OnOptionCreate()
 			return gsadb[name]
 		end,
 		args = {
-			general = GSA:CreateGeneralOption(),
-			spells  = GSA:CreateSpellsOption()
+			general     = GSA:CreateGeneralOption(),
+			spells      = GSA:CreateSpellsOption(),
+			spellSounds = GSA:CreateSoundSpellSwitcherOption()
 		}
 	}
 
@@ -30,6 +31,7 @@ function GSA:OnOptionCreate()
 	self.options.args.profiles.order = -1
 	
 	self:AddOption(L["Abilities"], "spells")
+	self:AddOption("Sound Abilities Switcher", "spellSounds")
 	self:AddOption(L["Profiles"], "profiles")
 end
 

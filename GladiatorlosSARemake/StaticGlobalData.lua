@@ -2,12 +2,14 @@ local GSA = GladiatorlosSA
 local GSALocale = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
 
 local GSA_LOCALEPATH = {
-    enUS = "GladiatorlosSARemake\\Voice_enUS",
+    enUS = "Voice_enUS\\",
 }
 GSA.GSA_LOCALEPATH = GSA_LOCALEPATH
 
 local GSA_LANGUAGE = {
-    ["GladiatorlosSARemake\\Voice_enUS"] = GSALocale["English(female)"],
+    ["Voice_enUS\\"] = GSALocale["English(female)"],
+    ["Voice_enUS_Short\\"] = GSALocale["English Short (female)"],
+    ["Voice_zhCN\\"] = "中文 (empty folder)"
 }
 GSA.GSA_LANGUAGE = GSA_LANGUAGE
 
@@ -36,7 +38,8 @@ local DefaultSettings = {
         displayPartyDebuffs = true,
 
         -- Option's select voice
-        voiceLocalePath = GSA_LOCALEPATH[GetLocale()] or "GladiatorlosSARemake\\Voice_enUS",
+        voiceLocalePath = GSA_LOCALEPATH[GetLocale()] or "Voice_enUS\\",
+        spellSoundPaths = {},
 
         -- TODO need refactor
         throttle = 0,
@@ -125,3 +128,20 @@ local DebugDisplaySpells = {
     }
 }
 GSA.DebugDisplaySpells = DebugDisplaySpells
+
+local groups_options = {
+	GENERAL     = { name = GSALocale["General Abilities"],        kind = "GENERAL",     order = 1  },
+	RACIAL      = { name = GSALocale["Racials"],                  kind = "RACIAL",      order = 2  },
+	DRUID       = { name = GSALocale["|cffFF7D0ADruid|r"],        kind = "DRUID",       order = 3  },
+	HUNTER      = { name = GSALocale["|cffABD473Hunter|r"],       kind = "HUNTER",      order = 4  },
+	MAGE        = { name = GSALocale["|cff69CCF0Mage|r"],         kind = "MAGE",        order = 5  },
+	PALADIN     = { name = GSALocale["|cffF58CBAPaladin|r"],      kind = "PALADIN",     order = 6  },
+	PRIEST      = { name = GSALocale["|cffFFFFFFPriest|r"],       kind = "PRIEST",      order = 7  },
+	ROGUE       = { name = GSALocale["|cffFFF569Rogue|r"],        kind = "ROGUE",       order = 8  },
+	SHAMAN      = { name = GSALocale["|cff0070daShaman|r"],       kind = "SHAMAN",      order = 9  },
+	WARLOCK     = { name = GSALocale["|cff9482C9Warlock|r"],      kind = "WARLOCK",     order = 10 },
+	WARRIOR     = { name = GSALocale["|cffC79C6EWarrior|r"],      kind = "WARRIOR",     order = 11 },
+	DEATHKNIGHT = { name = GSALocale["|cffC41F3BDeath Knight|r"], kind = "DEATHKNIGHT", order = 12 },
+	MONK        = { name = GSALocale["|cFF558A84Monk|r"],         kind = "MONK",        order = 13 }
+}
+GSA.groups_options = groups_options
