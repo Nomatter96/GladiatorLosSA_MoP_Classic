@@ -1,4 +1,4 @@
-# GladiatorLosSARemake (MoP_5.5)
+# GladiatorLosSARemake (MoP Classic 5.5)
 PvP Sound Alert addon for WoW MoP Classic
 
 Set Up:
